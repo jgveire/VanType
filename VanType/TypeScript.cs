@@ -8,24 +8,85 @@ namespace VanType
 {
     public class TypeScript : ITypeScriptConfig
     {
-        List<Type> _enumTypes = new List<Type>();
-        private bool _includeEnums;
+        private readonly List<Type> _enumTypes = new List<Type>();
+        private readonly List<Type> _types = new List<Type>();
+        private readonly Dictionary<Type, string> _classImports = new Dictionary<Type, string>();
+        private bool _includeEnums = true;
+        private bool _orderPropertiesByName = true;
+        private bool _prefixClasses;
         private bool _prefixInterface;
-        List<Type> _types = new List<Type>();
 
-        public ITypeScriptConfig Add<T>()
+        public ITypeScriptConfig Add<TEntity>()
         {
-            if (!_types.Contains(typeof(T)))
+            if (typeof(TEntity).IsEnum)
             {
-                _types.Add(typeof(T));
+                AddEnum<TEntity>();
+            }
+            else
+            {
+                AddType<TEntity>();
             }
 
             return this;
         }
 
+        private void AddType<TEntity>()
+        {
+            if (!_types.Contains(typeof(TEntity)))
+            {
+                _types.Add(typeof(TEntity));
+            }
+        }
+
+        private void AddEnum<TEntity>()
+        {
+            if (!_enumTypes.Contains(typeof(TEntity)))
+            {
+                _enumTypes.Add(typeof(TEntity));
+            }
+        }
+
         public string Generate()
         {
             StringBuilder script = new StringBuilder();
+
+            GenerateImports(script);
+            GenerateInterfaces(script);
+            GenerateEnums(script);
+
+            return script.ToString();
+        }
+
+        private void GenerateImports(StringBuilder script)
+        {
+            foreach (var classImport in _classImports)
+            {
+                GenerateClassImport(classImport.Key, classImport.Value, script);
+            }
+
+            if (_classImports.Any())
+            {
+                script.AppendLine(string.Empty);
+            }
+        }
+
+        private void GenerateClassImport(Type type, string relativePath, StringBuilder script)
+        {
+            string name = GetInterfaceName(type);
+            script.AppendLine($"import {{ {name} }} from '{relativePath}'");
+        }
+
+        private void GenerateEnums(StringBuilder script)
+        {
+            foreach (Type type in _enumTypes)
+            {
+                GenerateEnum(type, script);
+                script.AppendLine(string.Empty);
+            }
+        }
+
+        private void GenerateInterfaces(StringBuilder script)
+        {
             foreach (Type type in _types)
             {
                 if (type.IsEnum)
@@ -39,26 +100,46 @@ namespace VanType
 
                 script.AppendLine(string.Empty);
             }
+        }
 
-            foreach (Type type in _enumTypes)
+        public ITypeScriptConfig IncludeEnums(bool value)
+        {
+            _includeEnums = value;
+            return this;
+        }
+
+        public ITypeScriptConfig OrderPropertiesByName(bool value)
+        {
+            _orderPropertiesByName = value;
+            return this;
+        }
+
+        public ITypeScriptConfig Import<TEntity>(string relativePath)
+        {
+            if (!_classImports.ContainsKey(typeof(TEntity)))
             {
-                GenerateEnum(type, script);
-                script.AppendLine(string.Empty);
+                _classImports.Add(typeof(TEntity), relativePath);
             }
 
-            return script.ToString();
-        }
-
-        public ITypeScriptConfig IncludeEnums()
-        {
-            _includeEnums = true;
             return this;
         }
 
-        public ITypeScriptConfig PrefixInterface()
+
+        public ITypeScriptConfig PrefixClasses(bool value)
         {
-            _prefixInterface = true;
+            _prefixClasses = value;
             return this;
+        }
+
+        public ITypeScriptConfig PrefixInterfaces(bool value)
+        {
+            _prefixInterface = value;
+            return this;
+        }
+
+        public static ITypeScriptConfig Config()
+        {
+            return new TypeScript();
         }
 
         public ITypeScriptConfig ExcludeEnums()
@@ -71,7 +152,7 @@ namespace VanType
         {
             if (type.IsBoolean())
             {
-                return "bool";
+                return "boolean";
             }
             else if (type.IsNumber())
             {
@@ -101,7 +182,7 @@ namespace VanType
             }
             else if (type.IsClass)
             {
-                return $"I{type.Name}";
+                return GetInterfaceName(type);
             }
             else if(type.IsInterface)
             {
@@ -155,7 +236,7 @@ namespace VanType
             foreach (var value in Enum.GetValues(type))
             {
                 string name = value.ToString();
-                script.AppendLine($"\t{name} = {(int)value};");
+                script.AppendLine($"\t{name} = {(int)value},");
             }
         }
 
@@ -170,7 +251,7 @@ namespace VanType
 
         private void GenerateProperties(Type type, StringBuilder script)
         {
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetField);
+            var properties = GetProperties(type);
             foreach (PropertyInfo property in properties)
             {
                 if (CanAddToEnumCollection(property))
@@ -184,6 +265,18 @@ namespace VanType
             }
         }
 
+        private IEnumerable<PropertyInfo> GetProperties(Type type)
+        {
+            IEnumerable<PropertyInfo> properties = type
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetField);
+            if (_orderPropertiesByName)
+            {
+                properties = properties.OrderBy(p => p.Name);
+            }
+
+            return properties;
+        }
+
         private string GetEnumName(Type type)
         {
             return type.Name;
@@ -192,6 +285,10 @@ namespace VanType
         private string GetInterfaceName(Type type)
         {
             if (type.IsInterface && !_prefixInterface)
+            {
+                return type.Name;
+            }
+            else if (!type.IsInterface && !_prefixClasses)
             {
                 return type.Name;
             }
