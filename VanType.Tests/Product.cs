@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace VanType.Tests
 {
@@ -11,5 +12,9 @@ namespace VanType.Tests
         public ProductStatus Status { get; set; }
 
         public List<Tag> Tags { get; set; }
+
+        public DateTime LastUpdated { get; set; }
+
+        public int InStock { get; set; }
     }
 }

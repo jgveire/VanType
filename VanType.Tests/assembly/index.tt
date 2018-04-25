@@ -1,6 +1,8 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="$(TargetDir)VanType.dll" #>
+<#@ assembly name="$(TargetDir)VanType.Tests.dll" #>
 <#@ import namespace="VanType" #>
+<#@ import namespace="VanType.Tests" #>
 <#@ output extension=".d.ts" #>
 <#= TypeScript
     .Config()
@@ -8,7 +10,6 @@
     .PrefixClasses(false)
     .PrefixInterfaces(false)
     .OrderPropertiesByName(true)
-    //.Add<YourClassGoesHere>()
-	//.AddAssembly<YourClassGoesHere>()
-    .Generate() 
+    .AddAssembly<Product>()
+    .Generate()
 #>

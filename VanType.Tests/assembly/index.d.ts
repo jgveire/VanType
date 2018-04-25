@@ -1,4 +1,8 @@
-﻿import { Tag } from '../tag'
+﻿export interface ProductBase
+{
+	id: string;
+	name: string | null;
+}
 
 export interface Product
 {
@@ -10,6 +14,16 @@ export interface Product
 	price: number;
 	status: ProductStatus;
 	tags: Tag[];
+}
+
+export interface Tag
+{
+	id: number;
+	name: string | null;
+}
+
+export interface TypeScriptTests
+{
 }
 
 export enum ProductStatus

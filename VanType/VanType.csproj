@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TypeConverter.cs" />
     <Compile Include="ITypeScriptConfig.cs" />
     <Compile Include="TypeScript.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +69,7 @@
     </TypeScriptCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="build.cmd" />
     <None Include="VanType.nuspec" />
     <None Include="VanType.snk" />
   </ItemGroup>

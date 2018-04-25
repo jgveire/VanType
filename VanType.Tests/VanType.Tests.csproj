@@ -64,6 +64,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assembly\index.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>index.d.ts</LastGenOutput>
+    </Content>
     <Content Include="product\index.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>index.d.ts</LastGenOutput>
@@ -74,6 +78,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="assembly\index.d.ts">
+      <DependentUpon>index.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="product\index.d.ts">
       <DependentUpon>index.tt</DependentUpon>
       <AutoGen>True</AutoGen>

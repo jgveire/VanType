@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>VanType</id>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <title>VanType</title>
     <authors>Veire Solutions</authors>
     <owners>Veire Solutions</owners>
@@ -11,7 +11,7 @@
     <iconUrl>https://jgveire.github.io/Vanguard/Vanguard.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A generator for generation definitely typed files for your classes.</description>
-    <releaseNotes>First release.</releaseNotes>
+    <releaseNotes>Fixed type transformation issues and added extra functionality.</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>TypeScript DefinitelyTyped Generator</tags>
   </metadata>
