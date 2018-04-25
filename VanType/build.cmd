@@ -1,0 +1,1 @@
+..\packages\nuget.exe pack VanType.csproj -properties Configuration=Release
