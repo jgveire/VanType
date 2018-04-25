@@ -1,6 +1,5 @@
 ﻿import { Tag } from '../tag'
 
-
 export interface Product
 {
 	id: number;
