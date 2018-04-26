@@ -17,14 +17,17 @@ namespace VanType
         private bool _prefixClasses;
         private bool _prefixInterface;
 
-        public ITypeScriptConfig Add<TEntity>()
+        public ITypeScriptConfig AddClass<TEntity>()
         {
             return Add(typeof(TEntity));
         }
 
         public ITypeScriptConfig AddAssembly<T>()
         {
-            var types = typeof(T).Assembly.GetTypes().Where(type => type.IsClass);
+            var types = typeof(T)
+                .Assembly
+                .GetTypes()
+                .Where(type => type.IsClass && !type.IsAbstract);
             foreach (Type type in types)
             {
                 Add(type);
@@ -33,7 +36,7 @@ namespace VanType
             return this;
         }
 
-        public ITypeScriptConfig AddTypeConverter<T>(string scriptType)
+        public ITypeScriptConfig AddTypeConverter<T>(string scriptType, bool isNullable)
         {
             var converter = _typeConverters.FirstOrDefault(c => c.CSharpType == typeof(T));
             if (converter != null)
@@ -41,7 +44,7 @@ namespace VanType
                 _typeConverters.Remove(converter);
             }
 
-            _typeConverters.Add(new TypeConverter(typeof(T), scriptType));
+            _typeConverters.Add(new TypeConverter(typeof(T), scriptType, isNullable));
             return this;
         }
 
@@ -120,12 +123,12 @@ namespace VanType
             return this;
         }
 
-        public string GetTypeScriptType(Type type)
+        private string GetTypeScriptType(Type type)
         {
-            var converter = _typeConverters.FirstOrDefault(c => c.CSharpType == type);
+            var converter = GetTypeConverter(type);
             if (converter != null)
             {
-                return converter.TypeScriptType;
+                return converter.GenerateType();
             }
 
             if (type.IsEnum)
@@ -135,8 +138,15 @@ namespace VanType
             else if (type.IsEnumerable())
             {
                 Type itemType = type.GetGenericArguments()[0];
-                string s = GetTypeScriptType(itemType);
-                return $"{s}[]";
+
+                converter = GetTypeConverter(itemType);
+                if (converter != null)
+                {
+                    return converter.GenerateArrayType();
+                }
+
+                string typeScriptType = GetTypeScriptType(itemType);
+                return $"{typeScriptType}[]";
             }
             else if (type.IsClass)
             {
@@ -150,42 +160,48 @@ namespace VanType
             return "any";
         }
 
+        private TypeConverter GetTypeConverter(Type type)
+        {
+            return _typeConverters.FirstOrDefault(c => c.CSharpType == type);
+            
+        }
+
         private static List<TypeConverter> GetConverters()
         {
             return new List<TypeConverter>
             {
-                new TypeConverter(typeof(DateTime), "Date"),
-                new TypeConverter(typeof(DateTime), "Date | null"),
-                new TypeConverter(typeof(string), "string | null"),
-                new TypeConverter(typeof(Guid), "string"),
-                new TypeConverter(typeof(Guid?), "string | null"),
-                new TypeConverter(typeof(bool), "boolean"),
-                new TypeConverter(typeof(bool?), "boolean | null"),
-                new TypeConverter(typeof(object), "object | null"),
-                new TypeConverter(typeof(byte), "number"),
-                new TypeConverter(typeof(byte?), "number | null"),
-                new TypeConverter(typeof(sbyte), "number"),
-                new TypeConverter(typeof(sbyte?), "number | null"),
-                new TypeConverter(typeof(decimal), "number"),
-                new TypeConverter(typeof(decimal?), "number | null"),
-                new TypeConverter(typeof(double), "number"),
-                new TypeConverter(typeof(double?), "number | null"),
-                new TypeConverter(typeof(float), "number"),
-                new TypeConverter(typeof(float?), "number | null"),
-                new TypeConverter(typeof(int), "number"),
-                new TypeConverter(typeof(int?), "number | null"),
-                new TypeConverter(typeof(uint), "number"),
-                new TypeConverter(typeof(uint?), "number | null"),
-                new TypeConverter(typeof(int), "number"),
-                new TypeConverter(typeof(int?), "number | null"),
-                new TypeConverter(typeof(long), "number"),
-                new TypeConverter(typeof(long?), "number | null"),
-                new TypeConverter(typeof(ulong), "number"),
-                new TypeConverter(typeof(ulong?), "number | null"),
-                new TypeConverter(typeof(short), "number"),
-                new TypeConverter(typeof(short?), "number | null"),
-                new TypeConverter(typeof(ushort), "number"),
-                new TypeConverter(typeof(ushort?), "number | null"),
+                new TypeConverter(typeof(DateTime), "Date", false),
+                new TypeConverter(typeof(DateTime), "Date", true),
+                new TypeConverter(typeof(string), "string", true),
+                new TypeConverter(typeof(Guid), "string", false),
+                new TypeConverter(typeof(Guid?), "string", true),
+                new TypeConverter(typeof(bool), "boolean", false),
+                new TypeConverter(typeof(bool?), "boolean", true),
+                new TypeConverter(typeof(object), "object", true),
+                new TypeConverter(typeof(byte), "number", false),
+                new TypeConverter(typeof(byte?), "number", true),
+                new TypeConverter(typeof(sbyte), "number", false),
+                new TypeConverter(typeof(sbyte?), "number", true),
+                new TypeConverter(typeof(decimal), "number", false),
+                new TypeConverter(typeof(decimal?), "number", true),
+                new TypeConverter(typeof(double), "number", false),
+                new TypeConverter(typeof(double?), "number", true),
+                new TypeConverter(typeof(float), "number", false),
+                new TypeConverter(typeof(float?), "number", true),
+                new TypeConverter(typeof(int), "number", false),
+                new TypeConverter(typeof(int?), "number", true),
+                new TypeConverter(typeof(uint), "number", false),
+                new TypeConverter(typeof(uint?), "number", true),
+                new TypeConverter(typeof(int), "number", false),
+                new TypeConverter(typeof(int?), "number", true),
+                new TypeConverter(typeof(long), "number", false),
+                new TypeConverter(typeof(long?), "number", true),
+                new TypeConverter(typeof(ulong), "number", false),
+                new TypeConverter(typeof(ulong?), "number", true),
+                new TypeConverter(typeof(short), "number", false),
+                new TypeConverter(typeof(short?), "number", true),
+                new TypeConverter(typeof(ushort), "number", false),
+                new TypeConverter(typeof(ushort?), "number", true),
             };
         }
 

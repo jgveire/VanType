@@ -10,6 +10,6 @@
     .PrefixClasses(false)
     .PrefixInterfaces(false)
     .OrderPropertiesByName(true)
-    .Add<Tag>()
+    .AddClass<Tag>()
     .Generate()
 #>

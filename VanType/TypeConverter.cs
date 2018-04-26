@@ -4,7 +4,7 @@ namespace VanType
 {
     public class TypeConverter
     {
-        public TypeConverter(Type cSharpType, string typeScriptType)
+        public TypeConverter(Type cSharpType, string typeScriptType, bool isNullable)
         {
             if (cSharpType == null)
             {
@@ -21,10 +21,28 @@ namespace VanType
 
             CSharpType = cSharpType;
             TypeScriptType = typeScriptType;
+            IsNullable = isNullable;
         }
 
         public Type CSharpType { get; }
 
+        public bool IsNullable { get; set; }
+
         public string TypeScriptType { get; }
+
+        public string GenerateType()
+        {
+            if (IsNullable)
+            {
+                return $"{TypeScriptType} | null";
+            }
+
+            return TypeScriptType;
+        }
+
+        public string GenerateArrayType()
+        {
+            return $"{TypeScriptType}[]";
+        }
     }
 }

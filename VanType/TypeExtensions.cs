@@ -8,7 +8,14 @@ namespace VanType
     {
         public static bool IsEnumerable(this Type type)
         {
-            return type.GetInterfaces().Any(t => t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+            if (type.IsInterface && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
+                return true;
+            }
+
+            return type
+                .GetInterfaces()
+                .Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
         }
     }
 }

@@ -15,8 +15,8 @@ namespace VanType.Tests
                 .PrefixClasses(true)
                 .PrefixInterfaces(false)
                 .OrderPropertiesByName(true)
-                .Add<Product>()
-                .Add<Tag>()
+                .AddClass<Product>()
+                .AddClass<Tag>()
                 .Generate();
 
             // Assert

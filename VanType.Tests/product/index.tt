@@ -11,6 +11,6 @@
     .PrefixInterfaces(false)
     .OrderPropertiesByName(true)
     .Import<Tag>("../tag")
-    .Add<Product>()
+    .AddClass<Product>()
     .Generate()
 #>

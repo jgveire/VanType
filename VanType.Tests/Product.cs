@@ -11,10 +11,12 @@ namespace VanType.Tests
 
         public ProductStatus Status { get; set; }
 
-        public List<Tag> Tags { get; set; }
+        public IEnumerable<Tag> Tags { get; set; }
 
         public DateTime LastUpdated { get; set; }
 
         public int InStock { get; set; }
+
+        public IEnumerable<string> KeyWords { get; set; }
     }
 }

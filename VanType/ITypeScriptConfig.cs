@@ -5,9 +5,9 @@ namespace VanType
 {
     public interface ITypeScriptConfig
     {
-        ITypeScriptConfig Add<TEntity>();
+        ITypeScriptConfig AddClass<TEntity>();
         ITypeScriptConfig AddAssembly<T>();
-        ITypeScriptConfig AddTypeConverter<T>(string scriptType);
+        ITypeScriptConfig AddTypeConverter<T>(string scriptType, bool isNullable);
         string Generate();
         ITypeScriptConfig Import<TEntity>(string relativePath);
         ITypeScriptConfig IncludeEnums(bool value);

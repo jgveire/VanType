@@ -8,7 +8,7 @@
     .PrefixClasses(false)
     .PrefixInterfaces(false)
     .OrderPropertiesByName(true)
-    //.Add<YourClassGoesHere>()
+    //.AddClass<YourClassGoesHere>()
 	//.AddAssembly<YourClassGoesHere>()
     .Generate() 
 #>
