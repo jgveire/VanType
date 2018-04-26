@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanType", "VanType\VanType.csproj", "{D9C89D58-8029-4D17-AE89-9DC2AC350FC6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanType", "src\VanType\VanType.csproj", "{D9C89D58-8029-4D17-AE89-9DC2AC350FC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanType.Tests", "VanType.Tests\VanType.Tests.csproj", "{ECBE7B85-F99C-4C16-9D52-407CA6AA4451}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanType.Tests", "tests\VanType.Tests\VanType.Tests.csproj", "{ECBE7B85-F99C-4C16-9D52-407CA6AA4451}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
