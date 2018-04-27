@@ -6,6 +6,10 @@ using System.Text;
 
 namespace VanType
 {
+    /// <summary>
+    /// The TypeScript configuration.
+    /// </summary>
+    /// <seealso cref="VanType.ITypeScriptConfig" />
     public class TypeScript : ITypeScriptConfig
     {
         private readonly Dictionary<Type, string> _classImports = new Dictionary<Type, string>();
@@ -17,11 +21,7 @@ namespace VanType
         private bool _prefixClasses;
         private bool _prefixInterface;
 
-        public ITypeScriptConfig AddClass<TEntity>()
-        {
-            return Add(typeof(TEntity));
-        }
-
+        /// <inheritdoc />
         public ITypeScriptConfig AddAssembly<T>()
         {
             var types = typeof(T)
@@ -36,6 +36,13 @@ namespace VanType
             return this;
         }
 
+        /// <inheritdoc />
+        public ITypeScriptConfig AddClass<TEntity>()
+        {
+            return Add(typeof(TEntity));
+        }
+
+        /// <inheritdoc />
         public ITypeScriptConfig AddTypeConverter<T>(string scriptType, bool isNullable)
         {
             var converter = _typeConverters.FirstOrDefault(c => c.CSharpType == typeof(T));
@@ -48,6 +55,7 @@ namespace VanType
             return this;
         }
 
+        /// <inheritdoc />
         public string Generate()
         {
             StringBuilder script = new StringBuilder();
@@ -59,6 +67,7 @@ namespace VanType
             return script.ToString();
         }
 
+        /// <inheritdoc />
         public ITypeScriptConfig Import<TEntity>(string relativePath)
         {
             if (!_classImports.ContainsKey(typeof(TEntity)))
@@ -69,12 +78,14 @@ namespace VanType
             return this;
         }
 
+        /// <inheritdoc />
         public ITypeScriptConfig IncludeEnums(bool value)
         {
             _includeEnums = value;
             return this;
         }
 
+        /// <inheritdoc />
         public ITypeScriptConfig OrderPropertiesByName(bool value)
         {
             _orderPropertiesByName = value;
@@ -82,88 +93,27 @@ namespace VanType
         }
 
 
+        /// <inheritdoc />
         public ITypeScriptConfig PrefixClasses(bool value)
         {
             _prefixClasses = value;
             return this;
         }
 
+        /// <inheritdoc />
         public ITypeScriptConfig PrefixInterfaces(bool value)
         {
             _prefixInterface = value;
             return this;
         }
 
+        /// <summary>
+        /// Creates a new TypeScript configurations.
+        /// </summary>
+        /// <returns></returns>
         public static ITypeScriptConfig Config()
         {
             return new TypeScript();
-        }
-
-        public ITypeScriptConfig Add(Type type)
-        {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-            else if (type.IsEnum)
-            {
-                AddEnum(type);
-            }
-            else
-            {
-                AddType(type);
-            }
-
-            return this;
-        }
-
-        public ITypeScriptConfig ExcludeEnums()
-        {
-            _includeEnums = false;
-            return this;
-        }
-
-        private string GetTypeScriptType(Type type)
-        {
-            var converter = GetTypeConverter(type);
-            if (converter != null)
-            {
-                return converter.GenerateType();
-            }
-
-            if (type.IsEnum)
-            {
-                return type.Name;
-            }
-            else if (type.IsEnumerable())
-            {
-                Type itemType = type.GetGenericArguments()[0];
-
-                converter = GetTypeConverter(itemType);
-                if (converter != null)
-                {
-                    return converter.GenerateArrayType();
-                }
-
-                string typeScriptType = GetTypeScriptType(itemType);
-                return $"{typeScriptType}[]";
-            }
-            else if (type.IsClass)
-            {
-                return GetInterfaceName(type);
-            }
-            else if(type.IsInterface)
-            {
-                return type.Name;
-            }
-
-            return "any";
-        }
-
-        private TypeConverter GetTypeConverter(Type type)
-        {
-            return _typeConverters.FirstOrDefault(c => c.CSharpType == type);
-            
         }
 
         private static List<TypeConverter> GetConverters()
@@ -203,6 +153,24 @@ namespace VanType
                 new TypeConverter(typeof(ushort), "number", false),
                 new TypeConverter(typeof(ushort?), "number", true),
             };
+        }
+
+        private ITypeScriptConfig Add(Type type)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            else if (type.IsEnum)
+            {
+                AddEnum(type);
+            }
+            else
+            {
+                AddType(type);
+            }
+
+            return this;
         }
 
         private void AddEnum(Type type)
@@ -357,6 +325,49 @@ namespace VanType
             }
 
             return $"{name[0].ToString().ToLower()}{property.Name.Substring(1)}";
+        }
+
+        private TypeConverter GetTypeConverter(Type type)
+        {
+            return _typeConverters.FirstOrDefault(c => c.CSharpType == type);
+            
+        }
+
+        private string GetTypeScriptType(Type type)
+        {
+            var converter = GetTypeConverter(type);
+            if (converter != null)
+            {
+                return converter.GenerateType();
+            }
+
+            if (type.IsEnum)
+            {
+                return type.Name;
+            }
+            else if (type.IsEnumerable())
+            {
+                Type itemType = type.GetGenericArguments()[0];
+
+                converter = GetTypeConverter(itemType);
+                if (converter != null)
+                {
+                    return converter.GenerateArrayType();
+                }
+
+                string typeScriptType = GetTypeScriptType(itemType);
+                return $"{typeScriptType}[]";
+            }
+            else if (type.IsClass)
+            {
+                return GetInterfaceName(type);
+            }
+            else if(type.IsInterface)
+            {
+                return type.Name;
+            }
+
+            return "any";
         }
     }
 }

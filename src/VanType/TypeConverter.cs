@@ -2,8 +2,19 @@
 
 namespace VanType
 {
+    /// <summary>
+    /// The type converter.
+    /// </summary>
     public class TypeConverter
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypeConverter"/> class.
+        /// </summary>
+        /// <param name="cSharpType">The type in CSharp.</param>
+        /// <param name="typeScriptType">The type in TypeScript.</param>
+        /// <param name="isNullable">if set to <c>true</c> [is nullable].</param>
+        /// <exception cref="ArgumentNullException">Thrown when cSharpType or typeScriptType is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when typeScriptType contains an empty string or whitespace.</exception>
         public TypeConverter(Type cSharpType, string typeScriptType, bool isNullable)
         {
             if (cSharpType == null)
@@ -24,12 +35,43 @@ namespace VanType
             IsNullable = isNullable;
         }
 
+        /// <summary>
+        /// Gets the CSharp type.
+        /// </summary>
+        /// <value>
+        /// The the CSharp type.
+        /// </value>
         public Type CSharpType { get; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the CSharp type is nullable.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the CSharp type is nullable; otherwise, <c>false</c>.
+        /// </value>
         public bool IsNullable { get; set; }
 
+        /// <summary>
+        /// Gets the TypeScript type that should be used for the CSharp type.
+        /// </summary>
+        /// <value>
+        /// The TypeScript type that should be used for the CSharp type.
+        /// </value>
         public string TypeScriptType { get; }
 
+        /// <summary>
+        /// Generates the TypeScript type of an array.
+        /// </summary>
+        /// <returns>The TypeScript type for an array.</returns>
+        public string GenerateArrayType()
+        {
+            return $"{TypeScriptType}[]";
+        }
+
+        /// <summary>
+        /// Generates the TypeScript type.
+        /// </summary>
+        /// <returns>A TypeScript  type.</returns>
         public string GenerateType()
         {
             if (IsNullable)
@@ -38,11 +80,6 @@ namespace VanType
             }
 
             return TypeScriptType;
-        }
-
-        public string GenerateArrayType()
-        {
-            return $"{TypeScriptType}[]";
         }
     }
 }
