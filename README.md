@@ -95,6 +95,72 @@ TypeScript
     .Generate();
 ```
 
+### Adding enums
+You can add enumerations by calling the AddEnum method. 
+Another of is to call the IncludeEnums method. 
+This will add enumerations automatically during generation.
+
+```CSharp
+TypeScript
+    .Config()
+    .IncludeEnums(true)
+    .AddEnum<ProductStatus>()
+    .Generate()
+```
+
+### Prefix interface in TypeScript
+You can automatically prefix classes and interfaces with the capital "I" during generation via the options
+PrefixClasses and PrefixInterfaces. By default this is turned off.
+
+```CSharp
+TypeScript
+    .Config()
+    .PrefixClasses(true)
+    .PrefixInterfaces(true)
+    .AddClass<Product>()
+    .Generate()
+```
+
+
+### Order properties
+By default the properties are ordered alphabetically, 
+you can disable this via the property OrderPropertiesByName.
+
+```CSharp
+TypeScript
+    .Config()
+    .OrderPropertiesByName(true)
+    .AddClass<Product>()
+    .Generate()
+```
+
+### Import types
+When you are generating multiple TypeScript definition files you may want to import
+types from other modules. You can do this with the Import method. Below you can see an 
+example and the output that it will generate.
+
+```CSharp
+TypeScript
+    .Config()
+    .Import<Category>("../category")
+    .AddClass<Product>()
+    .Generate()
+```
+
+```TypeScript
+import { Category } from '../category';
+
+export interface Product
+{
+	id: string;
+	name: string | null;
+	category: Category | null;
+}
+```
+
+
 ## Wish list
 In the near future we would like to support inheritance. 
 Currently this isn't taken into account when generating TypeScript.
+
+> J :heart: K

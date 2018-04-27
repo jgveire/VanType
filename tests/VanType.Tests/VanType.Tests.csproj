@@ -53,6 +53,7 @@
     <Compile Include="ProductBase.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductStatus.cs" />
+    <Compile Include="Category.cs" />
     <Compile Include="Tag.cs" />
     <Compile Include="TypeScriptTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,10 +1,12 @@
-﻿import { Tag } from '../tag'
+﻿import { Tag } from '../tag';
+import { Category } from '../tag';
 
 export interface Product
 {
 	id: string;
 	inStock: number;
 	isVisible: boolean;
+	keyWords: string[];
 	lastUpdated: Date;
 	name: string | null;
 	price: number;

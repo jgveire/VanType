@@ -231,7 +231,7 @@ namespace VanType
         private void GenerateClassImport(Type type, string relativePath, StringBuilder script)
         {
             string name = GetInterfaceName(type);
-            script.AppendLine($"import {{ {name} }} from '{relativePath}'");
+            script.AppendLine($"import {{ {name} }} from '{relativePath}';");
         }
 
         private void GenerateEnum(Type type, StringBuilder script)
