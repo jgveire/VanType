@@ -15,10 +15,10 @@ Install the package via NuGet with the following command.
 `Install-Package VanType`
 
 ## Basic Setup
-After installation the VanType.dll will be added to your project and the folder VanType with the file index.tt (T4 template).
-Below you can find an example of a T4 template configuration.
+After installation the VanType.dll and the file VanType\index.tt (T4 template) will be added to your project.
+Below you can find an example of a VanType T4 template configuration.
 
-```CSharp
+```csharp
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="$(TargetDir)VanType.dll" #>
 <#@ assembly name="$(TargetDir)Example.Models.dll" #>
@@ -39,7 +39,10 @@ Below you can find an example of a T4 template configuration.
 VanType will only generate code for non abstract/static classes with public getter properties.
 Below you can find an example of the generated TypeScript definition file.
 
-```TypeScript
+> Note that you have to build your project before the TypeScript definition file is generated.
+> The reason for this is that the T4 template looks in your build output folder for the VanType.dll.
+
+```typescript
 export interface Product
 {
 	id: string;
@@ -57,9 +60,6 @@ export enum ProductStatus
 }
 ```
 
-> Please note that you have to build your project before the TypeScript definition file is generated.
-> The reason for this is that the T4 template looks in your build output folder for the VanType.dll.
-
 ## Configuration
 
 ### TypeScript
@@ -69,26 +69,26 @@ The class that does all the magic is called TypeScript. This is the starting poi
 When you call the Config method a new configuration is initialized. With this configuration you 
 can setup the rest of your configuration.
 
-```CSharp
+```csharp
 TypeScript.Config();
 ```
 
 ### Add Class
 With the AddClass method your can add a class to the configuration for which a TypeScript interface should be generated.
 
-> Note that VanType only generates interface for your classes and not interface.
+> Note that VanType only generates interface for your classes and not classes.
 
-```CSharp
+```csharp
 TypeScript
     .Config()
     .AddClass<Product>();
 ```
 
 ### Generate
-With the generate method the configured TypeScript is generated and returned as string. 
-This method should always be call as last method in the chain.
+With the Generate method the configured TypeScript is generated and returned as string. 
+This method should always be call as the last method in the configuration chain.
 
-```CSharp
+```csharp
 TypeScript
     .Config()
     .AddClass<Product>()
@@ -97,14 +97,20 @@ TypeScript
 
 ### Adding enums
 You can add enumerations by calling the AddEnum method. 
-Another of is to call the IncludeEnums method. 
+Another option is to call the IncludeEnums method. 
 This will add enumerations automatically during generation.
 
-```CSharp
+```csharp
+TypeScript
+    .Config()
+    .AddEnum<ProductStatus>()
+    .Generate()
+```
+Or
+```csharp
 TypeScript
     .Config()
     .IncludeEnums(true)
-    .AddEnum<ProductStatus>()
     .Generate()
 ```
 
@@ -112,7 +118,7 @@ TypeScript
 You can automatically prefix classes and interfaces with the capital "I" during generation via the options
 PrefixClasses and PrefixInterfaces. By default this is turned off.
 
-```CSharp
+```csharp
 TypeScript
     .Config()
     .PrefixClasses(true)
@@ -126,7 +132,7 @@ TypeScript
 By default the properties are ordered alphabetically, 
 you can disable this via the property OrderPropertiesByName.
 
-```CSharp
+```csharp
 TypeScript
     .Config()
     .OrderPropertiesByName(true)
@@ -139,7 +145,7 @@ When you are generating multiple TypeScript definition files you may want to imp
 types from other modules. You can do this with the Import method. Below you can see an 
 example and the output that it will generate.
 
-```CSharp
+```csharp
 TypeScript
     .Config()
     .Import<Category>("../category")
@@ -147,7 +153,7 @@ TypeScript
     .Generate()
 ```
 
-```TypeScript
+```typescript
 import { Category } from '../category';
 
 export interface Product
@@ -158,6 +164,19 @@ export interface Product
 }
 ```
 
+### Add Assembly
+When you want to generate TypeScript definitions for all classes in an assembly 
+you can do this by calling the AddAssembly method.
+This can be the case when you have all your models in a single assembly.
+
+> Note that the supplied class is used to determin the assembly.
+
+```csharp
+TypeScript
+    .Config()
+    .AddAssembly<Product>()
+    .Generate()
+```
 
 ## Wish list
 In the near future we would like to support inheritance. 
