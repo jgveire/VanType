@@ -178,8 +178,12 @@ TypeScript
     .Generate()
 ```
 
-## Wish list
-In the near future we would like to support inheritance. 
-Currently this isn't taken into account when generating TypeScript.
+## Faq
+### Does VanType support inherritance?
+No the reason for this is that VanType makes an interface for your models and not classes. Also TypeScript gives you the posibility to allow multiple types for variables.
+
+```typescript
+var model: IUpdateModel | ICreateModel;
+```
 
 > J :heart: K
