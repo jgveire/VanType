@@ -1,10 +1,16 @@
-﻿export interface ProductBase
+﻿export interface Category
+{
+	id: number;
+	name: string | null;
+}
+
+export interface ProductBase
 {
 	id: string;
 	name: string | null;
 }
 
-export interface Product
+export interface ProductModel
 {
 	id: string;
 	inStock: number;
@@ -21,10 +27,6 @@ export interface Tag
 {
 	id: number;
 	name: string | null;
-}
-
-export interface TypeScriptTests
-{
 }
 
 export enum ProductStatus

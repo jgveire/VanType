@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("VanType")]
-[assembly: AssemblyDescription("A generator for generation definitely typed files for your classes.")]
-[assembly: AssemblyConfiguration("Release")]
-[assembly: AssemblyCompany("Veire Solutions")]
-[assembly: AssemblyProduct("VanType")]
-[assembly: AssemblyCopyright("Copyright © Veire Solutions 2018")]
+[assembly: AssemblyTitle("VanType.Models")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("VanType.Models")]
+[assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d9c89d58-8029-4d17-ae89-9dc2ac350fc6")]
+[assembly: Guid("cffc9828-aa77-4880-904c-842f9d102b8c")]
 
 // Version information for an assembly consists of the following four values:
 //

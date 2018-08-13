@@ -72,9 +72,9 @@ namespace VanType
         /// Generates the TypeScript type.
         /// </summary>
         /// <returns>A TypeScript  type.</returns>
-        public string GenerateType()
+        public string GenerateType(bool isRequired)
         {
-            if (IsNullable)
+            if (IsNullable && !isRequired)
             {
                 return $"{TypeScriptType} | null";
             }

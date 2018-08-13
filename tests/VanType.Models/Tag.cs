@@ -1,6 +1,6 @@
-﻿namespace VanType.Tests
+﻿namespace VanType.Models
 {
-    public class Category
+    public class Tag
     {
         public int Id { get; set; }
 

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace VanType.Tests
+﻿namespace VanType.Models
 {
-    public class Product : ProductBase
+    using System;
+    using System.Collections.Generic;
+
+    public class ProductModel : ProductBase
     {
         public decimal Price { get; set; }
 

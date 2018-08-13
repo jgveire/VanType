@@ -1,7 +1,7 @@
 ﻿import { Tag } from '../tag';
 import { Category } from '../tag';
 
-export interface Product
+export interface ProductModel
 {
 	id: string;
 	inStock: number;

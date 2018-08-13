@@ -1,8 +1,8 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="$(TargetDir)VanType.dll" #>
-<#@ assembly name="$(TargetDir)VanType.Tests.dll" #>
+<#@ assembly name="$(TargetDir)VanType.Models.dll" #>
 <#@ import namespace="VanType" #>
-<#@ import namespace="VanType.Tests" #>
+<#@ import namespace="VanType.Models" #>
 <#@ output extension=".d.ts" #>
 <#= TypeScript
     .Config()
@@ -10,6 +10,6 @@
     .PrefixClasses(false)
     .PrefixInterfaces(false)
     .OrderPropertiesByName(true)
-    .AddAssembly<Product>()
+    .AddAssembly<ProductModel>()
     .Generate()
 #>

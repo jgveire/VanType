@@ -1,5 +1,7 @@
 ﻿namespace VanType
 {
+    using System;
+
     /// <summary>
     /// The TypeScript configuration.
     /// </summary>
@@ -69,5 +71,19 @@
         /// <param name="value">if set to <c>true</c> interfaces will be prefixed with a capital 'I'.</param>
         /// <returns>The TypeScript configuration.</returns>
         ITypeScriptConfig PrefixInterfaces(bool value);
+
+        /// <summary>
+        /// Transforms the name of the class.
+        /// </summary>
+        /// <param name="expression">The transform function.</param>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig TransformClassName(Func<string, string> expression);
+
+        /// <summary>
+        /// Transforms the name of the property.
+        /// </summary>
+        /// <param name="expression">The transform function.</param>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig TransformPropertyName(Func<string, string> expression);
     }
 }

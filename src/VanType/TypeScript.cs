@@ -6,6 +6,8 @@ using System.Text;
 
 namespace VanType
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// The TypeScript configuration.
     /// </summary>
@@ -20,6 +22,8 @@ namespace VanType
         private bool _orderPropertiesByName = true;
         private bool _prefixClasses;
         private bool _prefixInterface;
+        private Func<string, string> _transformClassNameExpression;
+        private Func<string, string> _transformPropertyNameExpression;
 
         /// <inheritdoc />
         public ITypeScriptConfig AddAssembly<T>()
@@ -107,6 +111,20 @@ namespace VanType
             return this;
         }
 
+        /// <inheritdoc />
+        public ITypeScriptConfig TransformClassName(Func<string, string> expression)
+        {
+            _transformClassNameExpression = expression;
+            return this;
+        }
+
+        public ITypeScriptConfig TransformPropertyName(Func<string, string> expression)
+        {
+
+            _transformPropertyNameExpression = expression;
+            return this;
+        }
+
         /// <summary>
         /// Creates a new TypeScript configurations.
         /// </summary>
@@ -120,14 +138,14 @@ namespace VanType
         {
             return new List<TypeConverter>
             {
-                new TypeConverter(typeof(DateTime), "Date", false),
-                new TypeConverter(typeof(DateTime), "Date", true),
                 new TypeConverter(typeof(string), "string", true),
+                new TypeConverter(typeof(object), "object", true),
+                new TypeConverter(typeof(DateTime), "Date", false),
+                new TypeConverter(typeof(DateTime?), "Date", true),
                 new TypeConverter(typeof(Guid), "string", false),
                 new TypeConverter(typeof(Guid?), "string", true),
                 new TypeConverter(typeof(bool), "boolean", false),
                 new TypeConverter(typeof(bool?), "boolean", true),
-                new TypeConverter(typeof(object), "object", true),
                 new TypeConverter(typeof(byte), "number", false),
                 new TypeConverter(typeof(byte?), "number", true),
                 new TypeConverter(typeof(sbyte), "number", false),
@@ -279,7 +297,8 @@ namespace VanType
                 }
 
                 string name = GetPropertyName(property);
-                string typeName = GetTypeScriptType(property.PropertyType);
+                bool isRequired = GetIsRequired(property);
+                string typeName = GetTypeScriptType(property.PropertyType, isRequired);
                 script.AppendLine($"\t{name}: {typeName};");
             }
         }
@@ -291,16 +310,31 @@ namespace VanType
 
         private string GetInterfaceName(Type type)
         {
+            string name = $"I{type.Name}";
             if (type.IsInterface && !_prefixInterface)
             {
-                return type.Name;
+                name = type.Name;
             }
             else if (!type.IsInterface && !_prefixClasses)
             {
-                return type.Name;
+                name = type.Name;
             }
 
-            return $"I{type.Name}";
+            if (_transformClassNameExpression != null)
+            {
+                name = _transformClassNameExpression(name);
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    throw new InvalidOperationException("The interface name cannot be null or empty.");
+                }
+            }
+
+            return name;
+        }
+
+        private bool GetIsRequired(PropertyInfo property)
+        {
+            return property.GetCustomAttribute<RequiredAttribute>() != null;
         }
 
         private IEnumerable<PropertyInfo> GetProperties(Type type)
@@ -317,14 +351,26 @@ namespace VanType
 
         private string GetPropertyName(PropertyInfo property)
         {
-            string name = property.Name;
-
-            if (name.Length == 1)
+            string name;
+            if (property.Name.Length == 1)
             {
-                return name[0].ToString().ToLower();
+                name = property.Name[0].ToString().ToLower();
+            }
+            else
+            {
+                name = $"{property.Name[0].ToString().ToLower()}{property.Name.Substring(1)}";
             }
 
-            return $"{name[0].ToString().ToLower()}{property.Name.Substring(1)}";
+            if (_transformPropertyNameExpression != null)
+            {
+                name = _transformPropertyNameExpression(name);
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    throw new InvalidOperationException("The property name cannot be null or empty.");
+                }
+            }
+
+            return name;
         }
 
         private TypeConverter GetTypeConverter(Type type)
@@ -333,12 +379,12 @@ namespace VanType
             
         }
 
-        private string GetTypeScriptType(Type type)
+        private string GetTypeScriptType(Type type, bool isRequired)
         {
             var converter = GetTypeConverter(type);
             if (converter != null)
             {
-                return converter.GenerateType();
+                return converter.GenerateType(isRequired);
             }
 
             if (type.IsEnum)
@@ -355,7 +401,7 @@ namespace VanType
                     return converter.GenerateArrayType();
                 }
 
-                string typeScriptType = GetTypeScriptType(itemType);
+                string typeScriptType = GetTypeScriptType(itemType, true);
                 return $"{typeScriptType}[]";
             }
             else if (type.IsClass)

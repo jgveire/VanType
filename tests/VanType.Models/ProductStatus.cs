@@ -1,4 +1,4 @@
-﻿namespace VanType.Tests
+﻿namespace VanType.Models
 {
     public enum ProductStatus
     {

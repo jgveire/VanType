@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace VanType.Tests
+﻿namespace VanType.Models
 {
+    using System;
+
     public class ProductBase
     {
         public Guid Id { get; set; }
