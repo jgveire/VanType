@@ -1,7 +1,7 @@
 ﻿export interface Tag
 {
 	id: number;
-	name: string | null;
+	name: string;
 }
 
 export interface Category

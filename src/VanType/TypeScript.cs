@@ -6,8 +6,6 @@ using System.Text;
 
 namespace VanType
 {
-    using System.ComponentModel.DataAnnotations;
-
     /// <summary>
     /// The TypeScript configuration.
     /// </summary>
@@ -297,8 +295,7 @@ namespace VanType
                 }
 
                 string name = GetPropertyName(property);
-                bool isRequired = GetIsRequired(property);
-                string typeName = GetTypeScriptType(property.PropertyType, isRequired);
+                string typeName = GetTypeScriptType(property.PropertyType, false);
                 script.AppendLine($"\t{name}: {typeName};");
             }
         }
@@ -330,11 +327,6 @@ namespace VanType
             }
 
             return name;
-        }
-
-        private bool GetIsRequired(PropertyInfo property)
-        {
-            return property.GetCustomAttribute<RequiredAttribute>() != null;
         }
 
         private IEnumerable<PropertyInfo> GetProperties(Type type)
