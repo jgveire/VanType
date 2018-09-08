@@ -17,6 +17,6 @@
 
         public int InStock { get; set; }
 
-        public IEnumerable<string> KeyWords { get; set; }
+        public string[] KeyWords { get; set; }
     }
 }
