@@ -77,7 +77,7 @@ namespace VanType.Tests {
         ///export interface ITag
         ///{
         ///	id: number;
-        ///	name: string;
+        ///	name: string | null;
         ///}
         ///
         ///export enum ProductStatus
