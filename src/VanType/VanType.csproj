@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
-    <Version>1.1.0</Version>
+    <Version>1.1.2</Version>
     <PackageIconUrl>https://jgveire.github.io/Vanguard/Vanguard.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/jgveire/VanType</PackageProjectUrl>
     <Copyright>Copyright 2018 Veire Solutions</Copyright>
@@ -15,17 +15,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>VanType.snk</AssemblyOriginatorKeyFile>
-    <PackageReleaseNotes>Added new options</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed array properties resulted in an exception during generation</PackageReleaseNotes>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
 
   <ItemGroup>
