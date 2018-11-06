@@ -42,11 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Category.cs" />
+    <Compile Include="CustomCollection.cs" />
+    <Compile Include="CustomItem.cs" />
     <Compile Include="ProductBase.cs" />
     <Compile Include="ProductModel.cs" />
     <Compile Include="ProductStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tag.cs" />
+    <Compile Include="TestModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

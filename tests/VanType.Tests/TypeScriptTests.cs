@@ -22,6 +22,7 @@ namespace VanType.Tests
                 .OrderPropertiesByName(true)
                 .AddClass<ProductModel>()
                 .AddClass<Tag>()
+                .AddClass<TestModel>()
                 .TransformClassName(name =>
                 {
                     if (name.EndsWith("Model"))

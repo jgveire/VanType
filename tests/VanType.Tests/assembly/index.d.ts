@@ -4,6 +4,19 @@
 	name: string | null;
 }
 
+export interface CustomCollection
+{
+	capacity: number;
+	count: number;
+	item: CustomItem;
+}
+
+export interface CustomItem
+{
+	id: number;
+	name: string | null;
+}
+
 export interface ProductBase
 {
 	id: string;
@@ -27,6 +40,11 @@ export interface Tag
 {
 	id: number;
 	name: string | null;
+}
+
+export interface TestModel
+{
+	items: CustomItem[];
 }
 
 export enum ProductStatus

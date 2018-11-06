@@ -80,6 +80,11 @@ namespace VanType.Tests {
         ///	name: string | null;
         ///}
         ///
+        ///export interface ITest
+        ///{
+        ///	items: ICustomItem[];
+        ///}
+        ///
         ///export enum ProductStatus
         ///{
         ///	InStock = 0,

@@ -383,9 +383,9 @@ namespace VanType
             {
                 return type.Name;
             }
-            else if (type.IsEnumerable())
+            else if (type.IsGenericEnumerable())
             {
-                Type itemType = type.GetElementType() ?? type.GetGenericArguments()[0];
+                Type itemType = type.GetGenericItemType();
 
                 converter = GetTypeConverter(itemType);
                 if (converter != null)

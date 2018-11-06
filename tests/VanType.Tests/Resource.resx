@@ -137,6 +137,11 @@ export interface ITag
 	name: string | null;
 }
 
+export interface ITest
+{
+	items: ICustomItem[];
+}
+
 export enum ProductStatus
 {
 	InStock = 0,
