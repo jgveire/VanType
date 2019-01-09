@@ -275,6 +275,10 @@ namespace VanType
                 {
                     GenerateEnum(type, script);
                 }
+                else if (type.IsNested)
+                {
+                    continue;
+                }
                 else
                 {
                     GenerateInterface(type, script);
