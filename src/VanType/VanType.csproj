@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
-    <Version>1.1.5</Version>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <Version>2.0</Version>
     <PackageIconUrl>https://jgveire.github.io/Vanguard/Vanguard.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/jgveire/VanType</PackageProjectUrl>
     <Copyright>Copyright 2018 Veire Solutions</Copyright>
     <Company>Veire Solutions</Company>
     <Authors>Veire Solutions</Authors>
-    <Description>A generator for generation definitely typed files for your classes.</Description>
+    <Description>Changed to .NET Standard 2.0</Description>
     <PackageTags>TypeScript DefinitelyTyped Generator</PackageTags>
     <RepositoryUrl>https://github.com/jgveire/VanType</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
