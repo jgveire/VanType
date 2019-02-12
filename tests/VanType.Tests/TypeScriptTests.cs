@@ -20,6 +20,8 @@ namespace VanType.Tests
                 .PrefixClasses(true)
                 .PrefixInterfaces(false)
                 .OrderPropertiesByName(true)
+                .PreserveInheritance(true)
+                .AddClass<ProductBase>()
                 .AddClass<ProductModel>()
                 .AddClass<Tag>()
                 .AddClass<TestModel>()

@@ -20,6 +20,7 @@ namespace VanType
         private bool _orderPropertiesByName = true;
         private bool _prefixClasses;
         private bool _prefixInterface;
+        private bool _preserveInheritance;
         private Func<string, string> _transformClassNameExpression;
         private Func<string, string> _transformPropertyNameExpression;
 
@@ -106,6 +107,12 @@ namespace VanType
         public ITypeScriptConfig PrefixInterfaces(bool value)
         {
             _prefixInterface = value;
+            return this;
+        }
+
+        public ITypeScriptConfig PreserveInheritance(bool value)
+        {
+            _preserveInheritance = value;
             return this;
         }
 
@@ -260,13 +267,32 @@ namespace VanType
 
         private void GenerateInterface(Type type, StringBuilder script)
         {
-            string name = GetInterfaceName(type);
-            script.AppendLine($"export interface {name}");
+            var name = GetInterfaceName(type);
+            script.Append($"export interface {name}");
+            if (_preserveInheritance)
+            {
+                var baseName = GetBaseName(type);
+                if (!string.IsNullOrEmpty(baseName))
+                {
+                    script.Append($" extends {baseName}");
+                }
+            }
+            script.AppendLine();
             script.AppendLine("{");
             GenerateProperties(type, script);
             script.AppendLine("}");
         }
 
+        private string GetBaseName(Type type)
+        {
+            if (type.BaseType != null && type.BaseType != typeof(object))
+            {
+                return GetInterfaceName(type.BaseType);
+            }
+
+            return null;
+        }
+		
         private void GenerateInterfaces(StringBuilder script)
         {
             foreach (Type type in _types)
@@ -335,11 +361,13 @@ namespace VanType
 
         private IEnumerable<PropertyInfo> GetProperties(Type type)
         {
-            IEnumerable<PropertyInfo> properties = type
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetField);
+            IEnumerable<PropertyInfo> properties = _preserveInheritance ? 
+                type.GetProperties(BindingFlags.Public | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.DeclaredOnly) : 
+                type.GetProperties(BindingFlags.Public | BindingFlags.GetField | BindingFlags.Instance);
+
             if (_orderPropertiesByName)
             {
-                properties = properties.OrderBy(p => p.Name);
+                return properties.OrderBy(p => p.Name);
             }
 
             return properties;

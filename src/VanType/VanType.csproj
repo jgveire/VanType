@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Version>2.0</Version>
+    <Version>2.1.0-Release3</Version>
     <PackageIconUrl>https://jgveire.github.io/Vanguard/Vanguard.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/jgveire/VanType</PackageProjectUrl>
     <Copyright>Copyright 2018 Veire Solutions</Copyright>
     <Company>Veire Solutions</Company>
     <Authors>Veire Solutions</Authors>
-    <Description>Changed to .NET Standard 2.0</Description>
+    <Description>Added preserve inheritance option.</Description>
     <PackageTags>TypeScript DefinitelyTyped Generator</PackageTags>
     <RepositoryUrl>https://github.com/jgveire/VanType</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>

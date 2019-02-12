@@ -73,6 +73,13 @@
         ITypeScriptConfig PrefixInterfaces(bool value);
 
         /// <summary>
+        /// Configures whether the inheritance should be preserved during generation.
+        /// </summary>
+        /// <param name="value">if set to <c>true</c> the inheritance will be preserved.</param>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig PreserveInheritance(bool value);
+
+        /// <summary>
         /// Transforms the name of the class.
         /// </summary>
         /// <param name="expression">The transform function.</param>
