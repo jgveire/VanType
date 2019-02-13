@@ -2,20 +2,20 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Version>2.1.0-Release3</Version>
+    <Version>2.1.2</Version>
     <PackageIconUrl>https://jgveire.github.io/Vanguard/Vanguard.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/jgveire/VanType</PackageProjectUrl>
     <Copyright>Copyright 2018 Veire Solutions</Copyright>
     <Company>Veire Solutions</Company>
     <Authors>Veire Solutions</Authors>
-    <Description>Added preserve inheritance option.</Description>
+    <Description>A generator for generation definitely typed files for your classes.</Description>
     <PackageTags>TypeScript DefinitelyTyped Generator</PackageTags>
     <RepositoryUrl>https://github.com/jgveire/VanType</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>VanType.snk</AssemblyOriginatorKeyFile>
-    <PackageReleaseNotes>Fixed generation issue for nested types. These are skipped now.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed none required issue.</PackageReleaseNotes>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>

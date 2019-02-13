@@ -325,9 +325,22 @@ namespace VanType
                 }
 
                 string name = GetPropertyName(property);
-                string typeName = GetTypeScriptType(property.PropertyType);
+                string typeName = GetPropertyType(property.PropertyType);
                 script.AppendLine($"\t{name}: {typeName};");
             }
+        }
+
+        private string GetPropertyType(Type propertyType)
+        {
+            string typeName = GetTypeScriptType(propertyType);
+            if (!typeName.Contains(" | null") &&
+                !typeName.Contains("[]") &&
+                (propertyType.IsClass || propertyType.IsInterface))
+            {
+                return $"{typeName} | null";
+            }
+
+            return typeName;
         }
 
         private string GetEnumName(Type type)

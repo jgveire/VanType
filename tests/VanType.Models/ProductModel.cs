@@ -18,5 +18,7 @@
         public int InStock { get; set; }
 
         public string[] KeyWords { get; set; }
+
+        public Tag Tag { get; set; }
     }
 }
