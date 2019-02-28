@@ -11,5 +11,6 @@
     .PrefixInterfaces(false)
     .OrderPropertiesByName(true)
     .AddAssembly<ProductModel>()
+	.ExcludeClass<TestModel>()
     .Generate()
 #>

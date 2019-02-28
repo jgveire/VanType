@@ -24,7 +24,9 @@ namespace VanType.Tests
                 .AddClass<ProductBase>()
                 .AddClass<ProductModel>()
                 .AddClass<Tag>()
+                .ExcludeProperty<Category>(nameof(Category.Id))
                 .AddClass<TestModel>()
+                .ExcludeClass<TestModel>()
                 .TransformClassName(name =>
                 {
                     if (name.EndsWith("Model"))

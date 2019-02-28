@@ -17,6 +17,7 @@ namespace VanType
         private readonly List<TypeConverter> _typeConverters = GetConverters();
         private readonly List<Type> _types = new List<Type>();
         private readonly List<Type> _excludedTypes = new List<Type>();
+        private readonly List<ClassProperty> _excludedProperties = new List<ClassProperty>();
         private bool _includeEnums = true;
         private bool _orderPropertiesByName = true;
         private bool _prefixClasses;
@@ -65,6 +66,18 @@ namespace VanType
             if (!_excludedTypes.Contains(typeof(T)))
             {
                 _excludedTypes.Add(typeof(T));
+            }
+
+            return this;
+        }
+
+        /// <inheritdoc />
+        public ITypeScriptConfig ExcludeProperty<T>(string propertyName)
+        {
+            var property = new ClassProperty(typeof(T), propertyName);
+            if (!_excludedProperties.Contains(property))
+            {
+                _excludedProperties.Add(property);
             }
 
             return this;
@@ -250,7 +263,7 @@ namespace VanType
         {
             foreach (Type type in _enumTypes)
             {
-                if (_excludedTypes.Contains(typeof(Type)))
+                if (_excludedTypes.Contains(type))
                 {
                     continue;
                 }
@@ -315,7 +328,7 @@ namespace VanType
             foreach (Type type in _types)
             {
                 if (type.IsNested ||
-                    _excludedTypes.Contains(typeof(Type)))
+                    _excludedTypes.Contains(type))
                 {
                     continue;
                 }
@@ -337,6 +350,12 @@ namespace VanType
             var properties = GetProperties(type);
             foreach (PropertyInfo property in properties)
             {
+                var classProperty = new ClassProperty(type, property.Name);
+                if (_excludedProperties.Contains(classProperty))
+                {
+                    continue;
+                }
+
                 if (CanAddToEnumCollection(property))
                 {
                     _enumTypes.Add(property.PropertyType);

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>2.2.0</Version>
+    <Version>2.3.0</Version>
     <PackageIconUrl>https://jgveire.github.io/Vanguard/Vanguard.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/jgveire/VanType</PackageProjectUrl>
     <Copyright>Copyright 2018 Veire Solutions</Copyright>
@@ -15,7 +15,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>VanType.snk</AssemblyOriginatorKeyFile>
-    <PackageReleaseNotes>Added option to exclude classes from generation.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added option to exclude properties from generation.</PackageReleaseNotes>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>
