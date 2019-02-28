@@ -16,6 +16,7 @@ namespace VanType
         private readonly List<Type> _enumTypes = new List<Type>();
         private readonly List<TypeConverter> _typeConverters = GetConverters();
         private readonly List<Type> _types = new List<Type>();
+        private readonly List<Type> _excludedTypes = new List<Type>();
         private bool _includeEnums = true;
         private bool _orderPropertiesByName = true;
         private bool _prefixClasses;
@@ -55,6 +56,17 @@ namespace VanType
             }
 
             _typeConverters.Add(new TypeConverter(typeof(T), scriptType, isNullable));
+            return this;
+        }
+
+        /// <inheritdoc />
+        public ITypeScriptConfig ExcludeClass<T>()
+        {
+            if (!_excludedTypes.Contains(typeof(T)))
+            {
+                _excludedTypes.Add(typeof(T));
+            }
+
             return this;
         }
 
@@ -238,6 +250,11 @@ namespace VanType
         {
             foreach (Type type in _enumTypes)
             {
+                if (_excludedTypes.Contains(typeof(Type)))
+                {
+                    continue;
+                }
+
                 GenerateEnum(type, script);
                 script.AppendLine(string.Empty);
             }
@@ -297,13 +314,14 @@ namespace VanType
         {
             foreach (Type type in _types)
             {
-                if (type.IsEnum)
-                {
-                    GenerateEnum(type, script);
-                }
-                else if (type.IsNested)
+                if (type.IsNested ||
+                    _excludedTypes.Contains(typeof(Type)))
                 {
                     continue;
+                }
+                else if (type.IsEnum)
+                {
+                    GenerateEnum(type, script);
                 }
                 else
                 {
