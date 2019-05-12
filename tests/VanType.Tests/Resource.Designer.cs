@@ -19,7 +19,7 @@ namespace VanType.Tests {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resource {
@@ -61,16 +61,21 @@ namespace VanType.Tests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to export interface IProduct
+        ///   Looks up a localized string similar to export interface IProductBase
         ///{
         ///	id: string;
+        ///	name: string | null;
+        ///}
+        ///
+        ///export interface IProduct extends IProductBase
+        ///{
         ///	inStock: number;
         ///	isVisible: boolean;
         ///	keyWords: string[];
         ///	lastUpdated: Date;
-        ///	name: string | null;
         ///	price: number;
         ///	status: ProductStatus;
+        ///	tag: ITag | null;
         ///	tags: ITag[];
         ///}
         ///
@@ -80,18 +85,11 @@ namespace VanType.Tests {
         ///	name: string | null;
         ///}
         ///
-        ///export interface ITest
-        ///{
-        ///	items: ICustomItem[];
-        ///}
-        ///
         ///export enum ProductStatus
         ///{
         ///	InStock = 0,
         ///	OutOfStock = 1,
-        ///}
-        ///
-        ///.
+        ///}.
         /// </summary>
         internal static string TypeScript {
             get {

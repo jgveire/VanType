@@ -38,7 +38,7 @@ namespace VanType
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>The generic type of the enumerable.</returns>
-        public static Type GetGenericItemType(this Type type)
+        public static Type? GetGenericItemType(this Type type)
         {
             Type itemType = type.GetElementType();
             if (itemType != null)

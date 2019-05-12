@@ -23,8 +23,8 @@ namespace VanType
         private bool _prefixClasses;
         private bool _prefixInterface;
         private bool _preserveInheritance;
-        private Func<string, string> _transformClassNameExpression;
-        private Func<string, string> _transformPropertyNameExpression;
+        private Func<string, string>? _transformClassNameExpression;
+        private Func<string, string>? _transformPropertyNameExpression;
 
         /// <inheritdoc />
         public ITypeScriptConfig AddAssembly<T>()
@@ -313,7 +313,7 @@ namespace VanType
             script.AppendLine("}");
         }
 
-        private string GetBaseName(Type type)
+        private string? GetBaseName(Type type)
         {
             if (type.BaseType != null && type.BaseType != typeof(object))
             {
@@ -447,7 +447,7 @@ namespace VanType
             return name;
         }
 
-        private TypeConverter GetTypeConverter(Type type)
+        private TypeConverter? GetTypeConverter(Type type)
         {
             return _typeConverters.FirstOrDefault(c => c.CSharpType == type);
             
@@ -467,7 +467,11 @@ namespace VanType
             }
             else if (type.IsGenericEnumerable())
             {
-                Type itemType = type.GetGenericItemType();
+                Type? itemType = type.GetGenericItemType();
+                if (itemType == null)
+                {
+                    return $"any[]";
+                }
 
                 converter = GetTypeConverter(itemType);
                 if (converter != null)

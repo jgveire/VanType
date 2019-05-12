@@ -118,16 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TypeScript" xml:space="preserve">
-    <value>export interface IProduct
+    <value>export interface IProductBase
 {
 	id: string;
+	name: string | null;
+}
+
+export interface IProduct extends IProductBase
+{
 	inStock: number;
 	isVisible: boolean;
 	keyWords: string[];
 	lastUpdated: Date;
-	name: string | null;
 	price: number;
 	status: ProductStatus;
+	tag: ITag | null;
 	tags: ITag[];
 }
 
@@ -137,17 +142,10 @@ export interface ITag
 	name: string | null;
 }
 
-export interface ITest
-{
-	items: ICustomItem[];
-}
-
 export enum ProductStatus
 {
 	InStock = 0,
 	OutOfStock = 1,
-}
-
-</value>
+}</value>
   </data>
 </root>

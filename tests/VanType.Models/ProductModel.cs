@@ -19,6 +19,6 @@
 
         public string[] KeyWords { get; set; }
 
-        public Tag Tag { get; set; }
+        public Tag? Tag { get; set; }
     }
 }
