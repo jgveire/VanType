@@ -25,7 +25,7 @@
         /// <summary>
         /// Adds a type to the configuration.
         /// </summary>
-        /// <typeparam name="TClass">The type to add.</typeparam>
+        /// <typeparam name="T">The type to add.</typeparam>
         /// <returns>The TypeScript configuration.</returns>
         ITypeScriptConfig AddType<T>();
 
@@ -67,6 +67,7 @@
         /// <typeparam name="T">The type that should be excluded from generation.</typeparam>
         /// <returns>The TypeScript configuration.</returns>
         ITypeScriptConfig ExcludeType<T>();
+
         /// <summary>
         /// Generates the TypeScript definitions.
         /// </summary>

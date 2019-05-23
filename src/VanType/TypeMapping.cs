@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace VanType
+﻿namespace VanType
 {
+    using System;
+
     /// <summary>
     /// The type mapping between CSharp and TypeScript.
     /// </summary>
@@ -52,7 +52,7 @@ namespace VanType
         public bool IsNullable { get; set; }
 
         /// <summary>
-        /// Gets the TypeScript type that should be used for the CSharp type.
+        /// Gets or sets the TypeScript type that should be used for the CSharp type.
         /// </summary>
         /// <value>
         /// The TypeScript type that should be used for the CSharp type.

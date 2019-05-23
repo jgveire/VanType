@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace VanType
+﻿namespace VanType
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The type extensions.
     /// </summary>
@@ -45,7 +45,7 @@ namespace VanType
             {
                 return itemType;
             }
-                
+
             var types = type.GetGenericArguments();
             if (types.Length == 1)
             {
@@ -56,7 +56,7 @@ namespace VanType
             {
                 return type.BaseType.GetGenericItemType();
             }
-            
+
             return null;
         }
     }

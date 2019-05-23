@@ -22,6 +22,27 @@ Added functionality for generic types.</PackageReleaseNotes>
     <LangVersion>8.0</LangVersion>
     <NullableContextOptions>enable</NullableContextOptions>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet>..\..\settings\Vanguard.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Release\net45\VanType.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\net452\VanType.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netstandard2.0\VanType.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CodeAnalysisRuleSet>..\..\settings\Vanguard.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\net45\VanType.Http.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\net452\VanType.Http.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\VanType.Http.xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />

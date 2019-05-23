@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-
-namespace VanType
+﻿namespace VanType
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+
     /// <summary>
     /// The TypeScript configuration.
     /// </summary>
@@ -26,10 +26,11 @@ namespace VanType
         private bool _preserveInheritance;
         private Func<string, string>? _transformClassNameExpression;
         private Func<string, string>? _transformPropertyNameExpression;
+
         /// <summary>
         /// Creates a new TypeScript configurations.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The TypeScript configuration.</returns>
         public static ITypeScriptConfig Config()
         {
             return new TypeScript();
@@ -63,7 +64,7 @@ namespace VanType
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            else  if (!_types.Contains(type))
+            else if (!_types.Contains(type))
             {
                 _types.Add(type);
             }
@@ -198,7 +199,6 @@ namespace VanType
             return this;
         }
 
-
         /// <inheritdoc />
         public ITypeScriptConfig PrefixClasses(bool value)
         {
@@ -312,7 +312,7 @@ namespace VanType
                 {
                     script.AppendLine($"\t{name} = {(int)value},");
                 }
-                else if(_enumConversionType == EnumConversionType.String)
+                else if (_enumConversionType == EnumConversionType.String)
                 {
                     script.AppendLine($"\t{name} = '{value}',");
                 }
@@ -348,6 +348,7 @@ namespace VanType
                     script.Append($" extends {baseName}");
                 }
             }
+
             script.AppendLine();
             script.AppendLine("{");
             GenerateProperties(type, script);
@@ -411,6 +412,7 @@ namespace VanType
         {
             return type.Name;
         }
+
         private IEnumerable<PropertyInfo> GetProperties(Type type)
         {
             IEnumerable<PropertyInfo> properties = _preserveInheritance ?
