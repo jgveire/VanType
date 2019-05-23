@@ -31,7 +31,7 @@ Below you can find an example of a VanType T4 template configuration.
     .PrefixClasses(false)
     .PrefixInterfaces(false)
     .OrderPropertiesByName(true)
-    .AddClass<Product>()
+    .AddType<Product>()
     .Generate()
 #>
 ```
@@ -81,7 +81,7 @@ With the AddClass method your can add a class to the configuration for which a T
 ```csharp
 TypeScript
     .Config()
-    .AddClass<Product>();
+    .AddType<Product>();
 ```
 
 ### Generate
@@ -91,19 +91,19 @@ This method should always be call as the last method in the configuration chain.
 ```csharp
 TypeScript
     .Config()
-    .AddClass<Product>()
+    .AddType<Product>()
     .Generate();
 ```
 
 ### Adding enums
-You can add enumerations by calling the AddEnum method. 
+You can add enumerations by calling the AddType method. 
 Another option is to call the IncludeEnums method. 
 This will add enumerations automatically during generation.
 
 ```csharp
 TypeScript
     .Config()
-    .AddEnum<ProductStatus>()
+    .AddType<ProductStatus>()
     .Generate()
 ```
 Or
@@ -123,7 +123,7 @@ TypeScript
     .Config()
     .PrefixClasses(true)
     .PrefixInterfaces(true)
-    .AddClass<Product>()
+    .AddType<Product>()
     .Generate()
 ```
 
@@ -136,7 +136,7 @@ you can disable this via the property OrderPropertiesByName.
 TypeScript
     .Config()
     .OrderPropertiesByName(true)
-    .AddClass<Product>()
+    .AddType<Product>()
     .Generate()
 ```
 
@@ -149,7 +149,7 @@ example and the output that it will generate.
 TypeScript
     .Config()
     .Import<Category>("../category")
-    .AddClass<Product>()
+    .AddType<Product>()
     .Generate()
 ```
 
