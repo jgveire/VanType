@@ -91,7 +91,6 @@ namespace VanType.Tests
             Assert.AreEqual(expected, result);
         }
 
-
         [TestMethod]
         public void When_generate_is_called_then_enum_should_should_be_converted_to_string_values()
         {
@@ -107,6 +106,20 @@ namespace VanType.Tests
 
             // Assert
             Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void When_get_interface_name_is_called_for_product_model_then_a_name_should_be_returned()
+        {
+            // Arrange
+            var systemUnderTest = new TypeScript();
+            systemUnderTest.PrefixClasses(true);
+
+            // Act
+            string result = systemUnderTest.GetInterfaceName(typeof(ProductModel));
+
+            // Assert
+            Assert.AreEqual("IProductModel", result);
         }
     }
 }

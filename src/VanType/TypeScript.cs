@@ -18,6 +18,7 @@ namespace VanType
         private readonly List<Type> _excludedTypes = new List<Type>();
         private readonly TypeConverter _typeConverter = new TypeConverter();
         private readonly List<Type> _types = new List<Type>();
+        private EnumConversionType _enumConversionType = EnumConversionType.Numeric;
         private bool _includeEnums = true;
         private bool _orderPropertiesByName = true;
         private bool _prefixClasses;
@@ -25,8 +26,6 @@ namespace VanType
         private bool _preserveInheritance;
         private Func<string, string>? _transformClassNameExpression;
         private Func<string, string>? _transformPropertyNameExpression;
-        private EnumConversionType _enumConversionType = EnumConversionType.Numeric;
-
         /// <summary>
         /// Creates a new TypeScript configurations.
         /// </summary>
@@ -124,6 +123,54 @@ namespace VanType
             GenerateEnums(script);
 
             return script.ToString();
+        }
+
+        /// <summary>
+        /// Gets the interface name for the supplied type.
+        /// </summary>
+        /// <param name="type">The type to retrieve the interface name from.</param>
+        /// <returns>A TypeScript interface name.</returns>
+        public string GetInterfaceName(Type type)
+        {
+            string name = $"I{type.Name}";
+            if (type.IsGenericTypeDefinition)
+            {
+                var types = string.Join(", ", type.GetGenericArguments().Select(e => e.Name));
+                var index = type.Name.IndexOf("`");
+                var tempName = type.Name.Substring(0, index);
+                if ((type.IsInterface && _prefixInterface) ||
+                    (!type.IsInterface && _prefixClasses))
+                {
+                    name = $"I{tempName}<{types}>";
+                }
+                else
+                {
+                    name = $"{tempName}<{types}>";
+                }
+            }
+            else if (type.IsGenericParameter)
+            {
+                name = type.Name;
+            }
+            else if (type.IsInterface && !_prefixInterface)
+            {
+                name = type.Name;
+            }
+            else if (!type.IsInterface && !_prefixClasses)
+            {
+                name = type.Name;
+            }
+
+            if (_transformClassNameExpression != null)
+            {
+                name = _transformClassNameExpression(name);
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    throw new InvalidOperationException("The interface name cannot be null or empty.");
+                }
+            }
+
+            return name;
         }
 
         /// <inheritdoc />
@@ -364,50 +411,6 @@ namespace VanType
         {
             return type.Name;
         }
-
-        private string GetInterfaceName(Type type)
-        {
-            string name = $"I{type.Name}";
-            if (type.IsGenericTypeDefinition)
-            {
-                var types = string.Join(", ", type.GetGenericArguments().Select(e => e.Name));
-                var index = type.Name.IndexOf("`");
-                var tempName = type.Name.Substring(0, index);
-                if ((type.IsInterface && _prefixInterface) ||
-                    (!type.IsInterface && _prefixClasses))
-                {
-                    name = $"I{tempName}<{types}>";
-                }
-                else
-                {
-                    name = $"{tempName}<{types}>";
-                }
-            }
-            else if (type.IsGenericParameter)
-            {
-                name = type.Name;
-            }
-            else if (type.IsInterface && !_prefixInterface)
-            {
-                name = type.Name;
-            }
-            else if (!type.IsInterface && !_prefixClasses)
-            {
-                name = type.Name;
-            }
-
-            if (_transformClassNameExpression != null)
-            {
-                name = _transformClassNameExpression(name);
-                if (string.IsNullOrWhiteSpace(name))
-                {
-                    throw new InvalidOperationException("The interface name cannot be null or empty.");
-                }
-            }
-
-            return name;
-        }
-
         private IEnumerable<PropertyInfo> GetProperties(Type type)
         {
             IEnumerable<PropertyInfo> properties = _preserveInheritance ?
