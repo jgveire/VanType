@@ -16,8 +16,8 @@ namespace VanType
         private readonly List<Type> _enumTypes = new List<Type>();
         private readonly List<ClassProperty> _excludedProperties = new List<ClassProperty>();
         private readonly List<Type> _excludedTypes = new List<Type>();
-        private readonly List<Type> _types = new List<Type>();
         private readonly TypeConverter _typeConverter = new TypeConverter();
+        private readonly List<Type> _types = new List<Type>();
         private bool _includeEnums = true;
         private bool _orderPropertiesByName = true;
         private bool _prefixClasses;
@@ -25,6 +25,7 @@ namespace VanType
         private bool _preserveInheritance;
         private Func<string, string>? _transformClassNameExpression;
         private Func<string, string>? _transformPropertyNameExpression;
+        private EnumConversionType _enumConversionType = EnumConversionType.Numeric;
 
         /// <summary>
         /// Creates a new TypeScript configurations.
@@ -53,7 +54,7 @@ namespace VanType
         /// <inheritdoc />
         public ITypeScriptConfig AddClass<TEntity>()
         {
-            return Add(typeof(TEntity));
+            return AddType<TEntity>();
         }
 
         /// <inheritdoc />
@@ -72,6 +73,12 @@ namespace VanType
         }
 
         /// <inheritdoc />
+        public ITypeScriptConfig AddType<T>()
+        {
+            return AddType(typeof(T));
+        }
+
+        /// <inheritdoc />
         public ITypeScriptConfig AddTypeConverter<T>(string scriptType, bool isNullable)
         {
             _typeConverter.AdddOrReplaceMapping(typeof(T), scriptType, isNullable);
@@ -81,12 +88,7 @@ namespace VanType
         /// <inheritdoc />
         public ITypeScriptConfig ExcludeClass<T>()
         {
-            if (!_excludedTypes.Contains(typeof(T)))
-            {
-                _excludedTypes.Add(typeof(T));
-            }
-
-            return this;
+            return ExcludeType<T>();
         }
 
         /// <inheritdoc />
@@ -96,6 +98,17 @@ namespace VanType
             if (!_excludedProperties.Contains(property))
             {
                 _excludedProperties.Add(property);
+            }
+
+            return this;
+        }
+
+        /// <inheritdoc />
+        public ITypeScriptConfig ExcludeType<T>()
+        {
+            if (!_excludedTypes.Contains(typeof(T)))
+            {
+                _excludedTypes.Add(typeof(T));
             }
 
             return this;
@@ -153,6 +166,7 @@ namespace VanType
             return this;
         }
 
+        /// <inheritdoc />
         public ITypeScriptConfig PreserveInheritance(bool value)
         {
             _preserveInheritance = value;
@@ -166,10 +180,17 @@ namespace VanType
             return this;
         }
 
+        /// <inheritdoc />
         public ITypeScriptConfig TransformPropertyName(Func<string, string> expression)
         {
-
             _transformPropertyNameExpression = expression;
+            return this;
+        }
+
+        /// <inheritdoc />
+        public ITypeScriptConfig UseEnumConversion(EnumConversionType conversionType)
+        {
+            _enumConversionType = conversionType;
             return this;
         }
 
@@ -240,7 +261,18 @@ namespace VanType
             foreach (var value in Enum.GetValues(type))
             {
                 string name = value.ToString();
-                script.AppendLine($"\t{name} = {(int)value},");
+                if (_enumConversionType == EnumConversionType.Numeric)
+                {
+                    script.AppendLine($"\t{name} = {(int)value},");
+                }
+                else if(_enumConversionType == EnumConversionType.String)
+                {
+                    script.AppendLine($"\t{name} = '{value}',");
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Unsupported EnumConversionType: {_enumConversionType}");
+                }
             }
         }
 

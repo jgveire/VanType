@@ -19,12 +19,20 @@
         /// </summary>
         /// <typeparam name="TClass">The type of the class.</typeparam>
         /// <returns>The TypeScript configuration.</returns>
+        [Obsolete("Make use of the AddType<T>() method.")]
         ITypeScriptConfig AddClass<TClass>();
 
         /// <summary>
         /// Adds a type to the configuration.
         /// </summary>
-        /// <typeparam name="type">The type to add.</typeparam>
+        /// <typeparam name="TClass">The type to add.</typeparam>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig AddType<T>();
+
+        /// <summary>
+        /// Adds a type to the configuration.
+        /// </summary>
+        /// <param name="type">The type to add.</param>
         /// <returns>The TypeScript configuration.</returns>
         ITypeScriptConfig AddType(Type type);
 
@@ -42,6 +50,7 @@
         /// </summary>
         /// <typeparam name="T">The type that should be excluded from generation.</typeparam>
         /// <returns>The TypeScript configuration.</returns>
+        [Obsolete("Make use of the ExcludeType<T>() method.")]
         ITypeScriptConfig ExcludeClass<T>();
 
         /// <summary>
@@ -52,6 +61,12 @@
         /// <returns>The TypeScript configuration.</returns>
         ITypeScriptConfig ExcludeProperty<T>(string propertyName);
 
+        /// <summary>
+        /// Excludes a type from generation.
+        /// </summary>
+        /// <typeparam name="T">The type that should be excluded from generation.</typeparam>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig ExcludeType<T>();
         /// <summary>
         /// Generates the TypeScript definitions.
         /// </summary>
@@ -114,5 +129,12 @@
         /// <param name="expression">The transform function.</param>
         /// <returns>The TypeScript configuration.</returns>
         ITypeScriptConfig TransformPropertyName(Func<string, string> expression);
+
+        /// <summary>
+        /// Configures which enumerations conversion should be used.
+        /// </summary>
+        /// <param name="conversionType">The enumerations conversion type to use when generating the TypeScript.</param>
+        /// <returns>A TypeScript definition file.</returns>
+        ITypeScriptConfig UseEnumConversion(EnumConversionType conversionType);
     }
 }

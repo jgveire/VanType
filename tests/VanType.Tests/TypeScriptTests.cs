@@ -21,12 +21,12 @@ namespace VanType.Tests
                 .PrefixInterfaces(false)
                 .OrderPropertiesByName(true)
                 .PreserveInheritance(true)
-                .AddClass<ProductBase>()
-                .AddClass<ProductModel>()
-                .AddClass<Tag>()
+                .AddType<ProductBase>()
+                .AddType<ProductModel>()
+                .AddType<Tag>()
                 .ExcludeProperty<Category>(nameof(Category.Id))
-                .AddClass<TestModel>()
-                .ExcludeClass<TestModel>()
+                .AddType<TestModel>()
+                .ExcludeType<TestModel>()
                 .TransformClassName(name =>
                 {
                     if (name.EndsWith("Model"))
@@ -68,6 +68,41 @@ namespace VanType.Tests
             string result = TypeScript
                 .Config()
                 .AddType(typeof(Lookup<int>))
+                .Generate();
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void When_generate_is_called_then_enum_should_should_be_converted_to_int_values()
+        {
+            // Arrange
+            string expected = "export enum ProductStatus\r\n{\r\n\tInStock = 0,\r\n\tOutOfStock = 1,\r\n}\r\n\r\n";
+
+            // Act
+            string result = TypeScript
+                .Config()
+                .UseEnumConversion(EnumConversionType.Numeric)
+                .AddType<ProductStatus>()
+                .Generate();
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+
+        [TestMethod]
+        public void When_generate_is_called_then_enum_should_should_be_converted_to_string_values()
+        {
+            // Arrange
+            string expected = "export enum ProductStatus\r\n{\r\n\tInStock = 'InStock',\r\n\tOutOfStock = 'OutOfStock',\r\n}\r\n\r\n";
+
+            // Act
+            string result = TypeScript
+                .Config()
+                .UseEnumConversion(EnumConversionType.String)
+                .AddType<ProductStatus>()
                 .Generate();
 
             // Assert
