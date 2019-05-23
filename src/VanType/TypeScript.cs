@@ -277,8 +277,8 @@ namespace VanType
         {
             foreach (var value in Enum.GetValues(type))
             {
-                string name = value.ToString();
-                script.AppendLine($"\t{name} = {(int)value},");
+                var name = value.ToString();
+                script.AppendLine($"\t{name} = {name},");
             }
         }
 
@@ -322,7 +322,7 @@ namespace VanType
 
             return null;
         }
-		
+
         private void GenerateInterfaces(StringBuilder script)
         {
             foreach (Type type in _types)
@@ -411,8 +411,8 @@ namespace VanType
 
         private IEnumerable<PropertyInfo> GetProperties(Type type)
         {
-            IEnumerable<PropertyInfo> properties = _preserveInheritance ? 
-                type.GetProperties(BindingFlags.Public | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.DeclaredOnly) : 
+            IEnumerable<PropertyInfo> properties = _preserveInheritance ?
+                type.GetProperties(BindingFlags.Public | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.DeclaredOnly) :
                 type.GetProperties(BindingFlags.Public | BindingFlags.GetField | BindingFlags.Instance);
 
             if (_orderPropertiesByName)
@@ -450,7 +450,7 @@ namespace VanType
         private TypeConverter? GetTypeConverter(Type type)
         {
             return _typeConverters.FirstOrDefault(c => c.CSharpType == type);
-            
+
         }
 
         private string GetTypeScriptType(Type type)
