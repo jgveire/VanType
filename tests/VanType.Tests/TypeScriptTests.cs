@@ -8,41 +8,6 @@ namespace VanType.Tests
     public class TypeScriptTests
     {
         [TestMethod]
-        public void When_generate_is_called_then_result_should_not_be_null()
-        {
-            // Arrange
-            string expected = Resource.TypeScript;
-
-            // Act
-            string result = TypeScript
-                .Config()
-                .IncludeEnums(true)
-                .PrefixClasses(true)
-                .PrefixInterfaces(false)
-                .OrderPropertiesByName(true)
-                .PreserveInheritance(true)
-                .AddType<ProductBase>()
-                .AddType<ProductModel>()
-                .AddType<Tag>()
-                .ExcludeProperty<Category>(nameof(Category.Id))
-                .AddType<TestModel>()
-                .ExcludeType<TestModel>()
-                .TransformClassName(name =>
-                {
-                    if (name.EndsWith("Model"))
-                    {
-                        return name.Substring(0, name.Length - 5);
-                    }
-
-                    return name;
-                })
-                .Generate();
-
-            // Assert
-            Assert.AreEqual(expected, result);
-        }
-
-        [TestMethod]
         public void When_generate_is_called_then_generic_should_be_handled_correctly()
         {
             // Arrange
@@ -120,6 +85,32 @@ namespace VanType.Tests
 
             // Assert
             Assert.AreEqual("IProductModel", result);
+        }
+
+        [TestMethod]
+        public void When_get_interface_name_is_called_for_generic_then_a_name_should_be_returned()
+        {
+            // Arrange
+            var systemUnderTest = new TypeScript();
+
+            // Act
+            string result = systemUnderTest.GetInterfaceName(typeof(Lookup<int>));
+
+            // Assert
+            Assert.AreEqual("Lookup<number>", result);
+        }
+
+        [TestMethod]
+        public void When_get_interface_name_is_called_for_complex_generic_then_a_name_should_be_returned()
+        {
+            // Arrange
+            var systemUnderTest = new TypeScript();
+
+            // Act
+            string result = systemUnderTest.GetInterfaceName(typeof(Lookup<ProductModel>));
+
+            // Assert
+            Assert.AreEqual("Lookup<ProductModel>", result);
         }
     }
 }

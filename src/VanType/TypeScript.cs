@@ -136,28 +136,15 @@
             string name = $"I{type.Name}";
             if (type.IsGenericTypeDefinition)
             {
-                var types = string.Join(", ", type.GetGenericArguments().Select(e => e.Name));
-                var index = type.Name.IndexOf("`");
-                var tempName = type.Name.Substring(0, index);
-                if ((type.IsInterface && _prefixInterface) ||
-                    (!type.IsInterface && _prefixClasses))
-                {
-                    name = $"I{tempName}<{types}>";
-                }
-                else
-                {
-                    name = $"{tempName}<{types}>";
-                }
+                name = GetGenericTypeDefinitionName(type);
             }
-            else if (type.IsGenericParameter)
+            else if (type.IsGenericType)
             {
-                name = type.Name;
+                name = GetGenericTypeName(type);
             }
-            else if (type.IsInterface && !_prefixInterface)
-            {
-                name = type.Name;
-            }
-            else if (!type.IsInterface && !_prefixClasses)
+            else if (type.IsGenericParameter ||
+                (type.IsInterface && !_prefixInterface) ||
+                (!type.IsInterface && !_prefixClasses))
             {
                 name = type.Name;
             }
@@ -411,6 +398,44 @@
         private string GetEnumName(Type type)
         {
             return type.Name;
+        }
+
+        private string GetGenericTypeDefinitionName(Type type)
+        {
+            string name;
+            var types = string.Join(", ", type.GetGenericArguments().Select(e => e.Name));
+            var index = type.Name.IndexOf("`");
+            var tempName = type.Name.Substring(0, index);
+            if ((type.IsInterface && _prefixInterface) ||
+                (!type.IsInterface && _prefixClasses))
+            {
+                name = $"I{tempName}<{types}>";
+            }
+            else
+            {
+                name = $"{tempName}<{types}>";
+            }
+
+            return name;
+        }
+
+        private string GetGenericTypeName(Type type)
+        {
+            string name;
+            var types = string.Join(", ", type.GetGenericArguments().Select(e => GetTypeScriptType(e)));
+            var index = type.Name.IndexOf("`");
+            var tempName = type.Name.Substring(0, index);
+            if ((type.IsInterface && _prefixInterface) ||
+                (!type.IsInterface && _prefixClasses))
+            {
+                name = $"I{tempName}<{types}>";
+            }
+            else
+            {
+                name = $"{tempName}<{types}>";
+            }
+
+            return name;
         }
 
         private IEnumerable<PropertyInfo> GetProperties(Type type)
