@@ -41,5 +41,37 @@ namespace VanType.Tests
             // Assert
             Assert.AreEqual(expected, result);
         }
+
+        [TestMethod]
+        public void When_generate_is_called_then_generic_should_be_handled_correctly()
+        {
+            // Arrange
+            string expected = "export interface Lookup<T>\r\n{\r\n\tid: T | null;\r\n\tname: string | null;\r\n}\r\n\r\n";
+
+            // Act
+            string result = TypeScript
+                .Config()
+                .AddType(typeof(Lookup<>))
+                .Generate();
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void When_generate_is_called_then_generic_should_not_be_processed()
+        {
+            // Arrange
+            string expected = string.Empty;
+
+            // Act
+            string result = TypeScript
+                .Config()
+                .AddType(typeof(Lookup<int>))
+                .Generate();
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
     }
 }

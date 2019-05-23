@@ -14,10 +14,10 @@ namespace VanType
     {
         private readonly Dictionary<Type, string> _classImports = new Dictionary<Type, string>();
         private readonly List<Type> _enumTypes = new List<Type>();
-        private readonly List<TypeConverter> _typeConverters = GetConverters();
-        private readonly List<Type> _types = new List<Type>();
-        private readonly List<Type> _excludedTypes = new List<Type>();
         private readonly List<ClassProperty> _excludedProperties = new List<ClassProperty>();
+        private readonly List<Type> _excludedTypes = new List<Type>();
+        private readonly List<Type> _types = new List<Type>();
+        private readonly TypeConverter _typeConverter = new TypeConverter();
         private bool _includeEnums = true;
         private bool _orderPropertiesByName = true;
         private bool _prefixClasses;
@@ -25,6 +25,15 @@ namespace VanType
         private bool _preserveInheritance;
         private Func<string, string>? _transformClassNameExpression;
         private Func<string, string>? _transformPropertyNameExpression;
+
+        /// <summary>
+        /// Creates a new TypeScript configurations.
+        /// </summary>
+        /// <returns></returns>
+        public static ITypeScriptConfig Config()
+        {
+            return new TypeScript();
+        }
 
         /// <inheritdoc />
         public ITypeScriptConfig AddAssembly<T>()
@@ -48,15 +57,24 @@ namespace VanType
         }
 
         /// <inheritdoc />
-        public ITypeScriptConfig AddTypeConverter<T>(string scriptType, bool isNullable)
+        public ITypeScriptConfig AddType(Type type)
         {
-            var converter = _typeConverters.FirstOrDefault(c => c.CSharpType == typeof(T));
-            if (converter != null)
+            if (type == null)
             {
-                _typeConverters.Remove(converter);
+                throw new ArgumentNullException(nameof(type));
+            }
+            else  if (!_types.Contains(type))
+            {
+                _types.Add(type);
             }
 
-            _typeConverters.Add(new TypeConverter(typeof(T), scriptType, isNullable));
+            return this;
+        }
+
+        /// <inheritdoc />
+        public ITypeScriptConfig AddTypeConverter<T>(string scriptType, bool isNullable)
+        {
+            _typeConverter.AdddOrReplaceMapping(typeof(T), scriptType, isNullable);
             return this;
         }
 
@@ -155,54 +173,6 @@ namespace VanType
             return this;
         }
 
-        /// <summary>
-        /// Creates a new TypeScript configurations.
-        /// </summary>
-        /// <returns></returns>
-        public static ITypeScriptConfig Config()
-        {
-            return new TypeScript();
-        }
-
-        private static List<TypeConverter> GetConverters()
-        {
-            return new List<TypeConverter>
-            {
-                new TypeConverter(typeof(string), "string", true),
-                new TypeConverter(typeof(object), "object", true),
-                new TypeConverter(typeof(DateTime), "Date", false),
-                new TypeConverter(typeof(DateTime?), "Date", true),
-                new TypeConverter(typeof(Guid), "string", false),
-                new TypeConverter(typeof(Guid?), "string", true),
-                new TypeConverter(typeof(bool), "boolean", false),
-                new TypeConverter(typeof(bool?), "boolean", true),
-                new TypeConverter(typeof(byte), "number", false),
-                new TypeConverter(typeof(byte?), "number", true),
-                new TypeConverter(typeof(sbyte), "number", false),
-                new TypeConverter(typeof(sbyte?), "number", true),
-                new TypeConverter(typeof(decimal), "number", false),
-                new TypeConverter(typeof(decimal?), "number", true),
-                new TypeConverter(typeof(double), "number", false),
-                new TypeConverter(typeof(double?), "number", true),
-                new TypeConverter(typeof(float), "number", false),
-                new TypeConverter(typeof(float?), "number", true),
-                new TypeConverter(typeof(int), "number", false),
-                new TypeConverter(typeof(int?), "number", true),
-                new TypeConverter(typeof(uint), "number", false),
-                new TypeConverter(typeof(uint?), "number", true),
-                new TypeConverter(typeof(int), "number", false),
-                new TypeConverter(typeof(int?), "number", true),
-                new TypeConverter(typeof(long), "number", false),
-                new TypeConverter(typeof(long?), "number", true),
-                new TypeConverter(typeof(ulong), "number", false),
-                new TypeConverter(typeof(ulong?), "number", true),
-                new TypeConverter(typeof(short), "number", false),
-                new TypeConverter(typeof(short?), "number", true),
-                new TypeConverter(typeof(ushort), "number", false),
-                new TypeConverter(typeof(ushort?), "number", true),
-            };
-        }
-
         private ITypeScriptConfig Add(Type type)
         {
             if (type == null)
@@ -226,14 +196,6 @@ namespace VanType
             if (!_enumTypes.Contains(type))
             {
                 _enumTypes.Add(type);
-            }
-        }
-
-        private void AddType(Type type)
-        {
-            if (!_types.Contains(type))
-            {
-                _types.Add(type);
             }
         }
 
@@ -313,22 +275,11 @@ namespace VanType
             script.AppendLine("}");
         }
 
-        private string? GetBaseName(Type type)
-        {
-            if (type.BaseType != null && type.BaseType != typeof(object))
-            {
-                return GetInterfaceName(type.BaseType);
-            }
-
-            return null;
-        }
-		
         private void GenerateInterfaces(StringBuilder script)
         {
             foreach (Type type in _types)
             {
-                if (type.IsNested ||
-                    _excludedTypes.Contains(type))
+                if (ShouldExcludeType(type))
                 {
                     continue;
                 }
@@ -367,17 +318,14 @@ namespace VanType
             }
         }
 
-        private string GetPropertyType(Type propertyType)
+        private string? GetBaseName(Type type)
         {
-            string typeName = GetTypeScriptType(propertyType);
-            if (!typeName.Contains(" | null") &&
-                !typeName.Contains("[]") &&
-                (propertyType.IsClass || propertyType.IsInterface))
+            if (type.BaseType != null && type.BaseType != typeof(object))
             {
-                return $"{typeName} | null";
+                return GetInterfaceName(type.BaseType);
             }
 
-            return typeName;
+            return null;
         }
 
         private string GetEnumName(Type type)
@@ -388,7 +336,26 @@ namespace VanType
         private string GetInterfaceName(Type type)
         {
             string name = $"I{type.Name}";
-            if (type.IsInterface && !_prefixInterface)
+            if (type.IsGenericTypeDefinition)
+            {
+                var types = string.Join(", ", type.GetGenericArguments().Select(e => e.Name));
+                var index = type.Name.IndexOf("`");
+                var tempName = type.Name.Substring(0, index);
+                if ((type.IsInterface && _prefixInterface) ||
+                    (!type.IsInterface && _prefixClasses))
+                {
+                    name = $"I{tempName}<{types}>";
+                }
+                else
+                {
+                    name = $"{tempName}<{types}>";
+                }
+            }
+            else if (type.IsGenericParameter)
+            {
+                name = type.Name;
+            }
+            else if (type.IsInterface && !_prefixInterface)
             {
                 name = type.Name;
             }
@@ -411,8 +378,8 @@ namespace VanType
 
         private IEnumerable<PropertyInfo> GetProperties(Type type)
         {
-            IEnumerable<PropertyInfo> properties = _preserveInheritance ? 
-                type.GetProperties(BindingFlags.Public | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.DeclaredOnly) : 
+            IEnumerable<PropertyInfo> properties = _preserveInheritance ?
+                type.GetProperties(BindingFlags.Public | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.DeclaredOnly) :
                 type.GetProperties(BindingFlags.Public | BindingFlags.GetField | BindingFlags.Instance);
 
             if (_orderPropertiesByName)
@@ -447,10 +414,22 @@ namespace VanType
             return name;
         }
 
-        private TypeConverter? GetTypeConverter(Type type)
+        private string GetPropertyType(Type propertyType)
         {
-            return _typeConverters.FirstOrDefault(c => c.CSharpType == type);
-            
+            string typeName = GetTypeScriptType(propertyType);
+            if (!typeName.Contains(" | null") &&
+                !typeName.Contains("[]") &&
+                (propertyType.IsClass || propertyType.IsInterface))
+            {
+                return $"{typeName} | null";
+            }
+
+            return typeName;
+        }
+
+        private TypeMapping? GetTypeConverter(Type type)
+        {
+            return _typeConverter.GetMapping(type);
         }
 
         private string GetTypeScriptType(Type type)
@@ -486,12 +465,19 @@ namespace VanType
             {
                 return GetInterfaceName(type);
             }
-            else if(type.IsInterface)
+            else if (type.IsInterface)
             {
                 return type.Name;
             }
 
             return "any";
+        }
+
+        private bool ShouldExcludeType(Type type)
+        {
+            return type.IsNested ||
+                (type.IsGenericType && !type.IsGenericTypeDefinition) ||
+                _excludedTypes.Contains(type);
         }
     }
 }

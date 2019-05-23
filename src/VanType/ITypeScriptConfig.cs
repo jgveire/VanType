@@ -22,6 +22,13 @@
         ITypeScriptConfig AddClass<TClass>();
 
         /// <summary>
+        /// Adds a type to the configuration.
+        /// </summary>
+        /// <typeparam name="type">The type to add.</typeparam>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig AddType(Type type);
+
+        /// <summary>
         /// Adds a type converter to the configuration.
         /// </summary>
         /// <typeparam name="T">The type for which the type should be converted.</typeparam>

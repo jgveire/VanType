@@ -1,85 +1,83 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace VanType
 {
     /// <summary>
-    /// The type converter.
+    /// The CSharp type to TypeScript type converter.
     /// </summary>
     public class TypeConverter
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TypeConverter"/> class.
-        /// </summary>
-        /// <param name="cSharpType">The type in CSharp.</param>
-        /// <param name="typeScriptType">The type in TypeScript.</param>
-        /// <param name="isNullable">if set to <c>true</c> [is nullable].</param>
-        /// <exception cref="ArgumentNullException">Thrown when cSharpType or typeScriptType is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when typeScriptType contains an empty string or whitespace.</exception>
-        public TypeConverter(Type cSharpType, string typeScriptType, bool isNullable)
-        {
-            if (cSharpType == null)
-            {
-                throw new ArgumentNullException(nameof(cSharpType));
-            }
-            else if (typeScriptType == null)
-            {
-                throw new ArgumentNullException(nameof(typeScriptType));
-            }
-            else if (string.IsNullOrWhiteSpace(typeScriptType))
-            {
-                throw new ArgumentException("The supplied argument contains an empty string or whitespace.", nameof(typeScriptType));
-            }
+        private readonly List<TypeMapping> _typeMappings = GetTypeMappings();
 
-            CSharpType = cSharpType;
-            TypeScriptType = typeScriptType;
-            IsNullable = isNullable;
+        /// <summary>
+        /// Adds or replaces a type mapping.
+        /// </summary>
+        /// <param name="type">The CSharp type.</param>
+        /// <param name="scriptType">The TypeScript type.</param>
+        /// <param name="isNullable">Indicates weather the CSharp type is nullable or not.</param>
+        public void AdddOrReplaceMapping(Type type, string scriptType, bool isNullable)
+        {
+            var mapping = _typeMappings.FirstOrDefault(c => c.CSharpType == type);
+            if (mapping != null)
+            {
+                mapping.TypeScriptType = scriptType;
+                mapping.IsNullable = isNullable;
+            }
+            else
+            {
+                _typeMappings.Add(new TypeMapping(type, scriptType, isNullable));
+            }
         }
 
         /// <summary>
-        /// Gets the CSharp type.
+        /// Gets a mapping by CSharp type.
         /// </summary>
-        /// <value>
-        /// The the CSharp type.
-        /// </value>
-        public Type CSharpType { get; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the CSharp type is nullable.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if the CSharp type is nullable; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsNullable { get; set; }
-
-        /// <summary>
-        /// Gets the TypeScript type that should be used for the CSharp type.
-        /// </summary>
-        /// <value>
-        /// The TypeScript type that should be used for the CSharp type.
-        /// </value>
-        public string TypeScriptType { get; }
-
-        /// <summary>
-        /// Generates the TypeScript type of an array.
-        /// </summary>
-        /// <returns>The TypeScript type for an array.</returns>
-        public string GenerateArrayType()
+        /// <param name="type">The CSharp type.</param>
+        /// <returns>A type mapping or null.</returns>
+        public TypeMapping? GetMapping(Type type)
         {
-            return $"{TypeScriptType}[]";
+            return _typeMappings.FirstOrDefault(c => c.CSharpType == type);
         }
 
-        /// <summary>
-        /// Generates the TypeScript type.
-        /// </summary>
-        /// <returns>A TypeScript  type.</returns>
-        public string GenerateType()
+        private static List<TypeMapping> GetTypeMappings()
         {
-            if (IsNullable)
+            return new List<TypeMapping>
             {
-                return $"{TypeScriptType} | null";
-            }
-
-            return TypeScriptType;
+                new TypeMapping(typeof(string), "string", true),
+                new TypeMapping(typeof(object), "object", true),
+                new TypeMapping(typeof(DateTime), "Date", false),
+                new TypeMapping(typeof(DateTime?), "Date", true),
+                new TypeMapping(typeof(Guid), "string", false),
+                new TypeMapping(typeof(Guid?), "string", true),
+                new TypeMapping(typeof(bool), "boolean", false),
+                new TypeMapping(typeof(bool?), "boolean", true),
+                new TypeMapping(typeof(byte), "number", false),
+                new TypeMapping(typeof(byte?), "number", true),
+                new TypeMapping(typeof(sbyte), "number", false),
+                new TypeMapping(typeof(sbyte?), "number", true),
+                new TypeMapping(typeof(decimal), "number", false),
+                new TypeMapping(typeof(decimal?), "number", true),
+                new TypeMapping(typeof(double), "number", false),
+                new TypeMapping(typeof(double?), "number", true),
+                new TypeMapping(typeof(float), "number", false),
+                new TypeMapping(typeof(float?), "number", true),
+                new TypeMapping(typeof(int), "number", false),
+                new TypeMapping(typeof(int?), "number", true),
+                new TypeMapping(typeof(uint), "number", false),
+                new TypeMapping(typeof(uint?), "number", true),
+                new TypeMapping(typeof(int), "number", false),
+                new TypeMapping(typeof(int?), "number", true),
+                new TypeMapping(typeof(long), "number", false),
+                new TypeMapping(typeof(long?), "number", true),
+                new TypeMapping(typeof(ulong), "number", false),
+                new TypeMapping(typeof(ulong?), "number", true),
+                new TypeMapping(typeof(short), "number", false),
+                new TypeMapping(typeof(short?), "number", true),
+                new TypeMapping(typeof(ushort), "number", false),
+                new TypeMapping(typeof(ushort?), "number", true),
+            };
         }
     }
 }
