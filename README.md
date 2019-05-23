@@ -74,7 +74,7 @@ TypeScript.Config();
 ```
 
 ### Add Class
-With the AddClass method your can add a class to the configuration for which a TypeScript interface should be generated.
+With the AddType method your can add a class to the configuration for which a TypeScript interface should be generated.
 
 > Note that VanType only generates interface for your classes and not classes.
 
