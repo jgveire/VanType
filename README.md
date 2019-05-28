@@ -177,13 +177,6 @@ TypeScript
     .AddAssembly<Product>()
     .Generate()
 ```
-
-## Faq
-### Does VanType support inherritance?
-No the reason for this is that VanType makes an interface for your models and not classes. Also TypeScript gives you the posibility to allow multiple types for variables.
-
-```typescript
-var model: IUpdateModel | ICreateModel;
 ```
 
 > J :heart: K
