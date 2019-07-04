@@ -12,10 +12,11 @@
         /// </summary>
         /// <param name="cSharpType">The type in CSharp.</param>
         /// <param name="typeScriptType">The type in TypeScript.</param>
+        /// <param name="defaultValue">The default TypeScript value.</param>
         /// <param name="isNullable">if set to <c>true</c> [is nullable].</param>
         /// <exception cref="ArgumentNullException">Thrown when cSharpType or typeScriptType is null.</exception>
         /// <exception cref="ArgumentException">Thrown when typeScriptType contains an empty string or whitespace.</exception>
-        public TypeMapping(Type cSharpType, string typeScriptType, bool isNullable)
+        public TypeMapping(Type cSharpType, string typeScriptType, string defaultValue, bool isNullable)
         {
             if (cSharpType == null)
             {
@@ -29,9 +30,18 @@
             {
                 throw new ArgumentException("The supplied argument contains an empty string or whitespace.", nameof(typeScriptType));
             }
+            else if (defaultValue == null)
+            {
+                throw new ArgumentNullException(nameof(defaultValue));
+            }
+            else if (string.IsNullOrWhiteSpace(defaultValue))
+            {
+                throw new ArgumentException("The supplied argument contains an empty string or whitespace.", nameof(defaultValue));
+            }
 
             CSharpType = cSharpType;
             TypeScriptType = typeScriptType;
+            DefaultValue = defaultValue;
             IsNullable = isNullable;
         }
 
@@ -42,6 +52,14 @@
         /// The the CSharp type.
         /// </value>
         public Type CSharpType { get; }
+
+        /// <summary>
+        /// Gets or sets the default value for the TypeScript type.
+        /// </summary>
+        /// <value>
+        /// The default value for a TypeScript type.
+        /// </value>
+        public string DefaultValue { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the CSharp type is nullable.

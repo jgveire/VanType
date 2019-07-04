@@ -11,13 +11,13 @@
 
         public ProductStatus Status { get; set; }
 
-        public IEnumerable<Tag> Tags { get; set; }
+        public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
 
-        public DateTime LastUpdated { get; set; }
+        public DateTime LastUpdated { get; set; } = DateTime.Now;
 
         public int InStock { get; set; }
 
-        public string[] KeyWords { get; set; }
+        public string[] KeyWords { get; set; } = new string[] { };
 
         public Tag? Tag { get; set; }
     }

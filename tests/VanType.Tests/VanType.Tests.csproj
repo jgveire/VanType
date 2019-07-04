@@ -54,56 +54,14 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
     <Compile Include="TypeScriptTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="assembly\index.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>index.d.ts</LastGenOutput>
-    </Content>
-    <Content Include="product\index.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>index.d.ts</LastGenOutput>
-    </Content>
-    <Content Include="tag\index.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>index.d.ts</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="assembly\index.d.ts">
-      <DependentUpon>index.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="product\index.d.ts">
-      <DependentUpon>index.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="tag\index.d.ts">
-      <DependentUpon>index.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </TypeScriptCompile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\VanType\VanType.csproj">

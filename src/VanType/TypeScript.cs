@@ -79,9 +79,17 @@
         }
 
         /// <inheritdoc />
+        [Obsolete("Make use of the overload method with the default value argument.")]
         public ITypeScriptConfig AddTypeConverter<T>(string scriptType, bool isNullable)
         {
-            _typeConverter.AdddOrReplaceMapping(typeof(T), scriptType, isNullable);
+            AddTypeConverter<T>(scriptType, "null", isNullable);
+            return this;
+        }
+
+        /// <inheritdoc />
+        public ITypeScriptConfig AddTypeConverter<T>(string scriptType, string defaultValue, bool isNullable)
+        {
+            _typeConverter.AdddOrReplaceMapping(typeof(T), scriptType, defaultValue, isNullable);
             return this;
         }
 
@@ -115,7 +123,26 @@
         }
 
         /// <inheritdoc />
+        [Obsolete("Make use of the generate interfaces method.")]
         public string Generate()
+        {
+            return GenerateInterfaces();
+        }
+
+        /// <inheritdoc />
+        public string GenerateClasses()
+        {
+            StringBuilder script = new StringBuilder();
+
+            GenerateImports(script);
+            GenerateClasses(script);
+            GenerateEnums(script);
+
+            return script.ToString();
+        }
+
+        /// <inheritdoc />
+        public string GenerateInterfaces()
         {
             StringBuilder script = new StringBuilder();
 
@@ -261,10 +288,55 @@
                    !_enumTypes.Contains(property.PropertyType);
         }
 
+        private void GenerateClass(Type type, StringBuilder script)
+        {
+            var name = GetInterfaceName(type);
+            script.Append($"export class {name}");
+            if (_preserveInheritance)
+            {
+                var baseName = GetBaseName(type);
+                if (!string.IsNullOrEmpty(baseName))
+                {
+                    script.Append($" extends {baseName}");
+                }
+            }
+
+            script.AppendLine();
+            script.AppendLine("{");
+            GenerateClassProperties(type, script);
+            script.AppendLine("}");
+        }
+
+        private void GenerateClasses(StringBuilder script)
+        {
+            foreach (Type type in _types)
+            {
+                if (ShouldExcludeType(type))
+                {
+                    continue;
+                }
+                else if (type.IsEnum)
+                {
+                    GenerateEnum(type, script);
+                }
+                else
+                {
+                    GenerateClass(type, script);
+                }
+
+                script.AppendLine(string.Empty);
+            }
+        }
+
         private void GenerateClassImport(Type type, string relativePath, StringBuilder script)
         {
             string name = GetInterfaceName(type);
             script.AppendLine($"import {{ {name} }} from '{relativePath}';");
+        }
+
+        private void GenerateClassProperties(Type type, StringBuilder script)
+        {
+            GenerateProperties(type, script, true);
         }
 
         private void GenerateEnum(Type type, StringBuilder script)
@@ -338,8 +410,13 @@
 
             script.AppendLine();
             script.AppendLine("{");
-            GenerateProperties(type, script);
+            GenerateInterfaceProperties(type, script);
             script.AppendLine("}");
+        }
+
+        private void GenerateInterfaceProperties(Type type, StringBuilder script)
+        {
+            GenerateProperties(type, script, false);
         }
 
         private void GenerateInterfaces(StringBuilder script)
@@ -363,7 +440,7 @@
             }
         }
 
-        private void GenerateProperties(Type type, StringBuilder script)
+        private void GenerateProperties(Type type, StringBuilder script, bool forClass)
         {
             var properties = GetProperties(type);
             foreach (PropertyInfo property in properties)
@@ -379,10 +456,22 @@
                     _enumTypes.Add(property.PropertyType);
                 }
 
-                string name = GetPropertyName(property);
-                string typeName = GetPropertyType(property.PropertyType);
-                script.AppendLine($"\t{name}: {typeName};");
+                var generatedProperty = GenerateProperty(property, forClass);
+                script.AppendLine(generatedProperty);
             }
+        }
+
+        private string GenerateProperty(PropertyInfo property, bool withDefaultValue)
+        {
+            string name = GetPropertyName(property);
+            string typeName = GetPropertyType(property.PropertyType);
+            if (withDefaultValue)
+            {
+                string defaultValue = GetDefaultPropertyValue(property.PropertyType);
+                return $"\t{name}: {typeName} = {defaultValue};";
+            }
+
+            return $"\t{name}: {typeName};";
         }
 
         private string? GetBaseName(Type type)
@@ -393,6 +482,28 @@
             }
 
             return null;
+        }
+
+        private string GetDefaultPropertyValue(Type propertyType)
+        {
+            var converter = GetTypeConverter(propertyType);
+            if (converter != null)
+            {
+                return converter.DefaultValue;
+            }
+
+            if (propertyType.IsEnum)
+            {
+                string name = GetEnumName(propertyType);
+                object value = Enum.GetValues(propertyType).GetValue(0);
+                return $"{name}.{value}";
+            }
+            else if (propertyType.IsGenericEnumerable())
+            {
+                return "[]";
+            }
+
+            return "null";
         }
 
         private string GetEnumName(Type type)

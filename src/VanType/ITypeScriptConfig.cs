@@ -46,6 +46,16 @@
         ITypeScriptConfig AddTypeConverter<T>(string scriptType, bool isNullable);
 
         /// <summary>
+        /// Adds a type converter to the configuration.
+        /// </summary>
+        /// <typeparam name="T">The type for which the type should be converted.</typeparam>
+        /// <param name="scriptType">The type that should be used in TypeScript..</param>
+        /// <param name="defaultValue">The default TypeScript value.</param>
+        /// <param name="isNullable">if set to <c>true</c> the type is nullable.</param>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig AddTypeConverter<T>(string scriptType, string defaultValue, bool isNullable);
+
+        /// <summary>
         /// Excludes a class from generation.
         /// </summary>
         /// <typeparam name="T">The type that should be excluded from generation.</typeparam>
@@ -72,7 +82,20 @@
         /// Generates the TypeScript definitions.
         /// </summary>
         /// <returns>A TypeScript definition file.</returns>
+        [Obsolete("Make use of the generate interfaces method.")]
         string Generate();
+
+        /// <summary>
+        /// Generates the TypeScript.
+        /// </summary>
+        /// <returns>A TypeScript file.</returns>
+        string GenerateClasses();
+
+        /// <summary>
+        /// Generates the TypeScript definitions.
+        /// </summary>
+        /// <returns>A TypeScript definition file.</returns>
+        string GenerateInterfaces();
 
         /// <summary>
         /// Imports the supplied type via the specified path.

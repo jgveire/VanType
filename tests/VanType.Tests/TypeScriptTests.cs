@@ -17,7 +17,7 @@ namespace VanType.Tests
             string result = TypeScript
                 .Config()
                 .AddType(typeof(Lookup<>))
-                .Generate();
+                .GenerateInterfaces();
 
             // Assert
             Assert.AreEqual(expected, result);
@@ -33,7 +33,7 @@ namespace VanType.Tests
             string result = TypeScript
                 .Config()
                 .AddType(typeof(Lookup<int>))
-                .Generate();
+                .GenerateInterfaces();
 
             // Assert
             Assert.AreEqual(expected, result);
@@ -50,7 +50,7 @@ namespace VanType.Tests
                 .Config()
                 .UseEnumConversion(EnumConversionType.Numeric)
                 .AddType<ProductStatus>()
-                .Generate();
+                .GenerateInterfaces();
 
             // Assert
             Assert.AreEqual(expected, result);
@@ -67,7 +67,7 @@ namespace VanType.Tests
                 .Config()
                 .UseEnumConversion(EnumConversionType.String)
                 .AddType<ProductStatus>()
-                .Generate();
+                .GenerateInterfaces();
 
             // Assert
             Assert.AreEqual(expected, result);
@@ -111,6 +111,37 @@ namespace VanType.Tests
 
             // Assert
             Assert.AreEqual("Lookup<ProductModel>", result);
+        }
+
+        [TestMethod]
+        public void When_generate_classes_is_called_the_tag_class_should_be_generated_correctly()
+        {
+            // Arrange
+            var expected = "export class Tag\r\n{\r\n\tid: number = 0;\r\n\tname: string | null = '';\r\n}\r\n\r\n";
+            var systemUnderTest = new TypeScript()
+                .AddType<Tag>();
+
+            // Act
+            string result = systemUnderTest.GenerateClasses();
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void When_generate_classes_is_called_the_simple_product_class_should_be_generated_correctly()
+        {
+            // Arrange
+            var expected = "export class SimpleProduct\r\n{\r\n\tid: number = 0;\r\n\tname: string | null = '';\r\n\tstatus: ProductStatus = ProductStatus.InStock;\r\n}\r\n\r\n";
+            var systemUnderTest = new TypeScript()
+                .IncludeEnums(false)
+                .AddType<SimpleProduct>();
+
+            // Act
+            string result = systemUnderTest.GenerateClasses();
+
+            // Assert
+            Assert.AreEqual(expected, result);
         }
     }
 }
