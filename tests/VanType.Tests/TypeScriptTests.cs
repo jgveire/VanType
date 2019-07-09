@@ -160,5 +160,27 @@ namespace VanType.Tests
             // Assert
             Assert.AreEqual(expected, result);
         }
+
+        [TestMethod]
+        public void When_generate_classes_is_called_then_sort_should_be_correct()
+        {
+            // Arrange
+            var systemUnderTest = new TypeScript()
+                .PreserveInheritance(true)
+                .AddType<TeamAddModel>()
+                .AddType<TeamDeleteModel>()
+                .AddType<TeamDetailModel>()
+                .AddType<TeamIdModel>()
+                .AddType<TeamModelBase>()
+                .AddType<TeamReadModel>()
+                .AddType<TeamsAddModel>()
+                .AddType<TeamUpdateModel>();
+
+            // Act
+            string result = systemUnderTest.GenerateClasses();
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
     }
 }

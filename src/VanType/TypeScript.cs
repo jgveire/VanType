@@ -309,8 +309,10 @@
 
         private void GenerateClasses(StringBuilder script)
         {
-            _types.Sort(SortTypes);
-            foreach (Type type in _types)
+            var types = _types
+                .OrderBy(e => e.GetInheritanceCount())
+                .ThenBy(e => e.Name);
+            foreach (Type type in types)
             {
                 if (ShouldExcludeType(type))
                 {
@@ -422,8 +424,10 @@
 
         private void GenerateInterfaces(StringBuilder script)
         {
-            _types.Sort(SortTypes);
-            foreach (Type type in _types)
+            var types = _types
+                .OrderBy(e => e.GetInheritanceCount())
+                .ThenBy(e => e.Name);
+            foreach (Type type in types)
             {
                 if (ShouldExcludeType(type))
                 {
@@ -669,11 +673,11 @@
             {
                 return 1;
             }
-            else if (x.BaseType == y)
+            else if (x.GetInheritanceCount() < y.GetInheritanceCount())
             {
                 return 1;
             }
-            else if (y.BaseType == x)
+            else if (y.GetInheritanceCount() > x.GetInheritanceCount())
             {
                 return -1;
             }

@@ -59,5 +59,22 @@
 
             return null;
         }
+
+        /// <summary>
+        /// Gets the number of classes the type inherits.
+        /// </summary>
+        /// <param name="type">The type to retrieve the inheritance count for.</param>
+        /// <returns>The number of classes the type inherits.</returns>
+        public static int GetInheritanceCount(this Type type)
+        {
+            var count = 0;
+            while (type != null)
+            {
+                count++;
+                type = type.BaseType;
+            }
+
+            return count;
+        }
     }
 }
