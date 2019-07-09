@@ -25,6 +25,7 @@
             {
                 mapping.TypeScriptType = scriptType;
                 mapping.IsNullable = isNullable;
+                mapping.DefaultValue = defaultValue;
             }
             else
             {

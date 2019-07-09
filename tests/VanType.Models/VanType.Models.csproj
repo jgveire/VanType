@@ -47,6 +47,7 @@
     <Compile Include="CustomCollection.cs" />
     <Compile Include="CustomItem.cs" />
     <Compile Include="Lookup.cs" />
+    <Compile Include="Person.cs" />
     <Compile Include="ProductBase.cs" />
     <Compile Include="ProductModel.cs" />
     <Compile Include="ProductStatus.cs" />

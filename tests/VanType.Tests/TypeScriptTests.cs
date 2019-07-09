@@ -2,6 +2,7 @@
 
 namespace VanType.Tests
 {
+    using System;
     using VanType.Models;
 
     [TestClass]
@@ -114,7 +115,7 @@ namespace VanType.Tests
         }
 
         [TestMethod]
-        public void When_generate_classes_is_called_the_tag_class_should_be_generated_correctly()
+        public void When_generate_classes_is_called_then_tag_class_should_be_generated_correctly()
         {
             // Arrange
             var expected = "export class Tag\r\n{\r\n\tid: number = 0;\r\n\tname: string | null = '';\r\n}\r\n\r\n";
@@ -129,13 +130,29 @@ namespace VanType.Tests
         }
 
         [TestMethod]
-        public void When_generate_classes_is_called_the_simple_product_class_should_be_generated_correctly()
+        public void When_generate_classes_is_called_then_simple_product_class_should_be_generated_correctly()
         {
             // Arrange
             var expected = "export class SimpleProduct\r\n{\r\n\tid: number = 0;\r\n\tname: string | null = '';\r\n\tstatus: ProductStatus = ProductStatus.InStock;\r\n}\r\n\r\n";
             var systemUnderTest = new TypeScript()
                 .IncludeEnums(false)
                 .AddType<SimpleProduct>();
+
+            // Act
+            string result = systemUnderTest.GenerateClasses();
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void When_generate_classes_is_called_then_type_converter_should_take_null_value_into_account()
+        {
+            // Arrange
+            var expected = "export class Person\r\n{\r\n\tbirthDate: Date | null = null;\r\n\tfullName: string | null = '';\r\n}\r\n\r\n";
+            var systemUnderTest = new TypeScript()
+                .AddTypeConverter<DateTime>("Date", "null", true)
+                .AddType<Person>();
 
             // Act
             string result = systemUnderTest.GenerateClasses();
