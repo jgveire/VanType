@@ -15,6 +15,7 @@
         private readonly Dictionary<Type, string> _classImports = new Dictionary<Type, string>();
         private readonly List<Type> _enumTypes = new List<Type>();
         private readonly List<ClassProperty> _excludedProperties = new List<ClassProperty>();
+        private readonly List<string> _excludedTypeNames = new List<string>();
         private readonly List<Type> _excludedTypes = new List<Type>();
         private readonly TypeConverter _typeConverter = new TypeConverter();
         private readonly List<Type> _types = new List<Type>();
@@ -114,9 +115,26 @@
         /// <inheritdoc />
         public ITypeScriptConfig ExcludeType<T>()
         {
-            if (!_excludedTypes.Contains(typeof(T)))
+            return ExcludeType(typeof(T));
+        }
+
+        /// <inheritdoc />
+        public ITypeScriptConfig ExcludeType(Type type)
+        {
+            if (!_excludedTypes.Contains(type))
             {
-                _excludedTypes.Add(typeof(T));
+                _excludedTypes.Add(type);
+            }
+
+            return this;
+        }
+
+        /// <inheritdoc />
+        public ITypeScriptConfig ExcludeType(string typeName)
+        {
+            if (!_excludedTypeNames.Contains(typeName))
+            {
+                _excludedTypeNames.Add(typeName);
             }
 
             return this;
@@ -656,33 +674,8 @@
         {
             return type.IsNested ||
                 (type.IsGenericType && !type.IsGenericTypeDefinition) ||
-                _excludedTypes.Contains(type);
-        }
-
-        private int SortTypes(Type x, Type y)
-        {
-            if (x == null && y == null)
-            {
-                return 0;
-            }
-            else if (x == null)
-            {
-                return -1;
-            }
-            else if (y == null)
-            {
-                return 1;
-            }
-            else if (x.GetInheritanceCount() < y.GetInheritanceCount())
-            {
-                return 1;
-            }
-            else if (y.GetInheritanceCount() > x.GetInheritanceCount())
-            {
-                return -1;
-            }
-
-            return 0;
+                _excludedTypes.Contains(type) ||
+                _excludedTypeNames.Contains(type.Name);
         }
     }
 }

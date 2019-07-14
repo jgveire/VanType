@@ -79,6 +79,20 @@
         ITypeScriptConfig ExcludeType<T>();
 
         /// <summary>
+        /// Excludes a type from generation.
+        /// </summary>
+        /// <param name="type">The type that should be excluded from generation.</param>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig ExcludeType(Type type);
+
+        /// <summary>
+        /// Excludes a type from generation.
+        /// </summary>
+        /// <param name="typeName">The name of the type that should be excluded from generation.</param>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig ExcludeType(string typeName);
+
+        /// <summary>
         /// Generates the TypeScript definitions.
         /// </summary>
         /// <returns>A TypeScript definition file.</returns>
