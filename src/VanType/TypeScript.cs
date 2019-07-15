@@ -390,11 +390,11 @@
                 string name = value.ToString();
                 if (_enumConversionType == EnumConversionType.Numeric)
                 {
-                    script.AppendLine($"\t{name} = {(int)value},");
+                    script.AppendLine($"    {name} = {(int)value},");
                 }
                 else if (_enumConversionType == EnumConversionType.String)
                 {
-                    script.AppendLine($"\t{name} = '{value}',");
+                    script.AppendLine($"    {name} = '{value}',");
                 }
                 else
                 {
@@ -492,10 +492,10 @@
             if (withDefaultValue)
             {
                 string defaultValue = GetDefaultPropertyValue(property.PropertyType);
-                return $"\t{name}: {typeName} = {defaultValue};";
+                return $"    {name}: {typeName} = {defaultValue};";
             }
 
-            return $"\t{name}: {typeName};";
+            return $"    {name}: {typeName};";
         }
 
         private string? GetBaseName(Type type)
