@@ -321,6 +321,7 @@
 
             script.AppendLine();
             script.AppendLine("{");
+            script.AppendLine($"    constructor(init?: Partial<{name}>) {{\r\n        Object.assign(this, init);\r\n    }}");
             GenerateClassProperties(type, script);
             script.AppendLine("}");
         }
