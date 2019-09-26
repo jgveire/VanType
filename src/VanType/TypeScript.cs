@@ -308,11 +308,12 @@
 
         private void GenerateClass(Type type, StringBuilder script)
         {
+            string? baseName = null;
             var name = GetInterfaceName(type);
             script.Append($"export class {name}");
             if (_preserveInheritance)
             {
-                var baseName = GetBaseName(type);
+                baseName = GetBaseName(type);
                 if (!string.IsNullOrEmpty(baseName))
                 {
                     script.Append($" extends {baseName}");
@@ -321,7 +322,14 @@
 
             script.AppendLine();
             script.AppendLine("{");
-            script.AppendLine($"    constructor(init?: Partial<{name}>) {{\r\n        Object.assign(this, init);\r\n    }}");
+            script.AppendLine($"    constructor(init?: Partial<{name}>) {{");
+            if (!string.IsNullOrEmpty(baseName))
+            {
+                script.AppendLine("    super();");
+            }
+
+            script.AppendLine("        Object.assign(this, init);");
+            script.AppendLine("    }");
             GenerateClassProperties(type, script);
             script.AppendLine("}");
         }
