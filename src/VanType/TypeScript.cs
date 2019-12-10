@@ -623,9 +623,7 @@
         private string GetPropertyType(Type propertyType)
         {
             string typeName = GetTypeScriptType(propertyType);
-            if (!typeName.Contains(" | null") &&
-                !typeName.Contains("[]") &&
-                (propertyType.IsClass || propertyType.IsInterface))
+            if (IsTypeNullable(propertyType))
             {
                 return $"{typeName} | null";
             }
@@ -645,8 +643,7 @@
             {
                 return converter.GenerateType();
             }
-
-            if (type.IsEnum)
+            else if (type.IsEnum)
             {
                 return type.Name;
             }
@@ -677,6 +674,17 @@
             }
 
             return "any";
+        }
+
+        private bool IsTypeNullable(Type type)
+        {
+            var converter = GetTypeConverter(type);
+            if (converter != null)
+            {
+                return converter.IsNullable;
+            }
+
+            return Nullable.GetUnderlyingType(type) != null;
         }
 
         private bool ShouldExcludeType(Type type)

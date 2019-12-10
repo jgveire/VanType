@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>3.2.1</Version>
+    <Version>3.2.2-Release1</Version>
     <PackageIconUrl>https://jgveire.github.io/Vanguard/Vanguard.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/jgveire/VanType</PackageProjectUrl>
     <Copyright>Copyright 2018 Veire Solutions</Copyright>
@@ -15,7 +15,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>VanType.snk</AssemblyOriginatorKeyFile>
-    <PackageReleaseNotes>Added constructor to generated classes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Nullable type fix</PackageReleaseNotes>
     <PackageLicense>MIT License
 
 Copyright (c) 2017 Veire Solutions
