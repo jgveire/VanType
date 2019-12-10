@@ -623,7 +623,9 @@
         private string GetPropertyType(Type propertyType)
         {
             string typeName = GetTypeScriptType(propertyType);
-            if (IsTypeNullable(propertyType))
+            if (IsTypeNullable(propertyType) &&
+                !typeName.Contains(" | null") &&
+                !typeName.Contains("[]")
             {
                 return $"{typeName} | null";
             }
