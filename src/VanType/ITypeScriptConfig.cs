@@ -15,14 +15,6 @@
         ITypeScriptConfig AddAssembly<T>();
 
         /// <summary>
-        /// Adds a class to the configuration.
-        /// </summary>
-        /// <typeparam name="TClass">The type of the class.</typeparam>
-        /// <returns>The TypeScript configuration.</returns>
-        [Obsolete("Make use of the AddType<T>() method.")]
-        ITypeScriptConfig AddClass<TClass>();
-
-        /// <summary>
         /// Adds a type to the configuration.
         /// </summary>
         /// <typeparam name="T">The type to add.</typeparam>
@@ -41,27 +33,10 @@
         /// </summary>
         /// <typeparam name="T">The type for which the type should be converted.</typeparam>
         /// <param name="scriptType">The type that should be used in TypeScript..</param>
-        /// <param name="isNullable">if set to <c>true</c> the type is nullable.</param>
-        /// <returns>The TypeScript configuration.</returns>
-        ITypeScriptConfig AddTypeConverter<T>(string scriptType, bool isNullable);
-
-        /// <summary>
-        /// Adds a type converter to the configuration.
-        /// </summary>
-        /// <typeparam name="T">The type for which the type should be converted.</typeparam>
-        /// <param name="scriptType">The type that should be used in TypeScript..</param>
         /// <param name="defaultValue">The default TypeScript value.</param>
         /// <param name="isNullable">if set to <c>true</c> the type is nullable.</param>
         /// <returns>The TypeScript configuration.</returns>
         ITypeScriptConfig AddTypeConverter<T>(string scriptType, string defaultValue, bool isNullable);
-
-        /// <summary>
-        /// Excludes a class from generation.
-        /// </summary>
-        /// <typeparam name="T">The type that should be excluded from generation.</typeparam>
-        /// <returns>The TypeScript configuration.</returns>
-        [Obsolete("Make use of the ExcludeType<T>() method.")]
-        ITypeScriptConfig ExcludeClass<T>();
 
         /// <summary>
         /// Excludes a class from generation.
@@ -93,13 +68,6 @@
         ITypeScriptConfig ExcludeType(string typeName);
 
         /// <summary>
-        /// Generates the TypeScript definitions.
-        /// </summary>
-        /// <returns>A TypeScript definition file.</returns>
-        [Obsolete("Make use of the generate interfaces method.")]
-        string Generate();
-
-        /// <summary>
         /// Generates the TypeScript.
         /// </summary>
         /// <returns>A TypeScript file.</returns>
@@ -125,6 +93,13 @@
         /// <param name="value">if set to <c>true</c> enumerations will be included automatically.</param>
         /// <returns>The TypeScript configuration.</returns>
         ITypeScriptConfig IncludeEnums(bool value);
+
+        /// <summary>
+        /// Configures whether all properties should be nullable.
+        /// </summary>
+        /// <param name="value">if set to <c>true</c> all properties will be nullable.</param>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig MakeAllPropertiesNullable(bool value);
 
         /// <summary>
         /// Configures whether properties should be ordered alphabetically.

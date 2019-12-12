@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VanType.Models</RootNamespace>
     <AssemblyName>VanType.Models</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <LangVersion>8.0</LangVersion>
     <NullableContextOptions>enable</NullableContextOptions>
     <Nullable>enable</Nullable>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,6 +48,7 @@
     <Compile Include="Category.cs" />
     <Compile Include="CustomCollection.cs" />
     <Compile Include="CustomItem.cs" />
+    <Compile Include="EnumModel.cs" />
     <Compile Include="Lookup.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="ProductBase.cs" />

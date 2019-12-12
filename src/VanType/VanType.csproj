@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>3.2.2-Release2</Version>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>4.0.0-Release1</Version>
     <PackageIconUrl>https://jgveire.github.io/Vanguard/Vanguard.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/jgveire/VanType</PackageProjectUrl>
-    <Copyright>Copyright 2018 Veire Solutions</Copyright>
+    <Copyright>Copyright 2019 Veire Solutions</Copyright>
     <Company>Veire Solutions</Company>
     <Authors>Veire Solutions</Authors>
     <Description>A generator for generation definitely typed files for your classes.</Description>
@@ -15,10 +15,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>VanType.snk</AssemblyOriginatorKeyFile>
-    <PackageReleaseNotes>Nullable type fix</PackageReleaseNotes>
+    <PackageReleaseNotes>Added C# 8.0 nullable types support.</PackageReleaseNotes>
     <PackageLicense>MIT License
 
-Copyright (c) 2017 Veire Solutions
+Copyright (c) 2019 Veire Solutions
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -47,39 +47,20 @@ SOFTWARE.
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CodeAnalysisRuleSet>..\..\settings\Vanguard.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\net45\VanType.xml</DocumentationFile>
-    <DocumentationFile>bin\Release\net452\VanType.xml</DocumentationFile>
     <DocumentationFile>bin\Release\netstandard2.0\VanType.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <CodeAnalysisRuleSet>..\..\settings\Vanguard.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\net45\VanType.Http.xml</DocumentationFile>
-    <DocumentationFile>bin\Debug\net452\VanType.Http.xml</DocumentationFile>
-    <DocumentationFile>bin\Debug\netstandard2.0\VanType.Http.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\VanType.xml</DocumentationFile>
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Namotion.Reflection" Version="1.0.7" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="VanType\index.d.ts">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>index.tt</DependentUpon>
-    </None>
-    <None Update="VanType\index.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>index.d.ts</LastGenOutput>
-    </None>
   </ItemGroup>
 
 </Project>

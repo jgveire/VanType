@@ -120,6 +120,7 @@ namespace VanType.Tests
             // Arrange
             var expected = "export class Tag\r\n{\r\n    constructor(init?: Partial<Tag>) {\r\n        Object.assign(this, init);\r\n    }\r\n    id: number = 0;\r\n    name: string | null = '';\r\n}\r\n\r\n";
             var systemUnderTest = new TypeScript()
+                .MakeAllPropertiesNullable(false)
                 .AddType<Tag>();
 
             // Act
@@ -136,6 +137,7 @@ namespace VanType.Tests
             var expected = "export class SimpleProduct\r\n{\r\n    constructor(init?: Partial<SimpleProduct>) {\r\n        Object.assign(this, init);\r\n    }\r\n    id: number = 0;\r\n    name: string | null = '';\r\n    status: ProductStatus = ProductStatus.InStock;\r\n}\r\n\r\n";
             var systemUnderTest = new TypeScript()
                 .IncludeEnums(false)
+                .MakeAllPropertiesNullable(false)
                 .AddType<SimpleProduct>();
 
             // Act
@@ -156,6 +158,21 @@ namespace VanType.Tests
 
             // Act
             string result = systemUnderTest.GenerateClasses();
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void When_generate_classes_is_called_then_nullable_enum_should_be_generated_correctly()
+        {
+            // Arrange
+            var expected = "export interface EnumModel\r\n{\r\n    status: ProductStatus | null;\r\n}\r\n\r\n";
+            var systemUnderTest = new TypeScript()
+                .AddType<EnumModel>();
+
+            // Act
+            string result = systemUnderTest.GenerateInterfaces();
 
             // Assert
             Assert.AreEqual(expected, result);

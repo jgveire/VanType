@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Text;
+    using Namotion.Reflection;
 
     /// <summary>
     /// The TypeScript configuration.
@@ -21,6 +22,7 @@
         private readonly List<Type> _types = new List<Type>();
         private EnumConversionType _enumConversionType = EnumConversionType.Numeric;
         private bool _includeEnums = true;
+        private bool _makeAllPropertiesNullable = true;
         private bool _orderPropertiesByName = true;
         private bool _prefixClasses;
         private bool _prefixInterface;
@@ -53,12 +55,6 @@
         }
 
         /// <inheritdoc />
-        public ITypeScriptConfig AddClass<TEntity>()
-        {
-            return AddType<TEntity>();
-        }
-
-        /// <inheritdoc />
         public ITypeScriptConfig AddType(Type type)
         {
             if (type == null)
@@ -80,24 +76,10 @@
         }
 
         /// <inheritdoc />
-        [Obsolete("Make use of the overload method with the default value argument.")]
-        public ITypeScriptConfig AddTypeConverter<T>(string scriptType, bool isNullable)
-        {
-            AddTypeConverter<T>(scriptType, "null", isNullable);
-            return this;
-        }
-
-        /// <inheritdoc />
         public ITypeScriptConfig AddTypeConverter<T>(string scriptType, string defaultValue, bool isNullable)
         {
             _typeConverter.AdddOrReplaceMapping(typeof(T), scriptType, defaultValue, isNullable);
             return this;
-        }
-
-        /// <inheritdoc />
-        public ITypeScriptConfig ExcludeClass<T>()
-        {
-            return ExcludeType<T>();
         }
 
         /// <inheritdoc />
@@ -138,13 +120,6 @@
             }
 
             return this;
-        }
-
-        /// <inheritdoc />
-        [Obsolete("Make use of the generate interfaces method.")]
-        public string Generate()
-        {
-            return GenerateInterfaces();
         }
 
         /// <inheritdoc />
@@ -221,6 +196,13 @@
         public ITypeScriptConfig IncludeEnums(bool value)
         {
             _includeEnums = value;
+            return this;
+        }
+
+        /// <inheritdoc />
+        public ITypeScriptConfig MakeAllPropertiesNullable(bool value)
+        {
+            _makeAllPropertiesNullable = value;
             return this;
         }
 
@@ -497,7 +479,7 @@
         private string GenerateProperty(PropertyInfo property, bool withDefaultValue)
         {
             string name = GetPropertyName(property);
-            string typeName = GetPropertyType(property.PropertyType);
+            string typeName = GetPropertyType(property);
             if (withDefaultValue)
             {
                 string defaultValue = GetDefaultPropertyValue(property.PropertyType);
@@ -620,10 +602,10 @@
             return name;
         }
 
-        private string GetPropertyType(Type propertyType)
+        private string GetPropertyType(PropertyInfo property)
         {
-            string typeName = GetTypeScriptType(propertyType);
-            if (IsTypeNullable(propertyType) &&
+            string typeName = GetTypeScriptType(property.PropertyType);
+            if ((IsTypeNullable(property) || _makeAllPropertiesNullable) &&
                 !typeName.Contains(" | null") &&
                 !typeName.Contains("[]"))
             {
@@ -648,6 +630,10 @@
             else if (type.IsEnum)
             {
                 return type.Name;
+            }
+            else if (Nullable.GetUnderlyingType(type)?.IsEnum == true)
+            {
+                return Nullable.GetUnderlyingType(type).Name;
             }
             else if (type.IsGenericEnumerable())
             {
@@ -678,15 +664,15 @@
             return "any";
         }
 
-        private bool IsTypeNullable(Type type)
+        private bool IsTypeNullable(PropertyInfo property)
         {
-            var converter = GetTypeConverter(type);
+            var converter = GetTypeConverter(property.PropertyType);
             if (converter != null)
             {
                 return converter.IsNullable;
             }
 
-            return Nullable.GetUnderlyingType(type) != null;
+            return property.ToContextualProperty().IsNullableType;
         }
 
         private bool ShouldExcludeType(Type type)
