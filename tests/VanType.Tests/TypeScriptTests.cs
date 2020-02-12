@@ -199,5 +199,23 @@ namespace VanType.Tests
             // Assert
             Assert.IsNotNull(result);
         }
+
+        [TestMethod]
+        public void When_generate_is_called_then_enum_should_should_be_converted_to_non_duplicate_string_values()
+        {
+            // Arrange
+            string expected = "export enum ProductType\r\n{\r\n    None = 'None',\r\n    Bike = 'Bike',\r\n}\r\n\r\n";
+
+            // Act
+            string result = TypeScript
+                .Config()
+                .UseEnumConversion(EnumConversionType.String)
+                .AddType<ProductType>()
+                .GenerateClasses();
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
     }
 }
