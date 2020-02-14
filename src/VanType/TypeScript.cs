@@ -394,9 +394,16 @@
 
         private void GenerateEnumValues(Type type, StringBuilder script)
         {
+            var values = new List<string>();
             foreach (var value in Enum.GetValues(type))
             {
-                string name = value.ToString();
+                var name = value.ToString();
+                if (values.Contains(name))
+                {
+                    continue;
+                }
+
+                values.Add(name);
                 if (_enumConversionType == EnumConversionType.Numeric)
                 {
                     script.AppendLine($"    {name} = {(int)value},");
