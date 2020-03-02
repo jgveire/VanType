@@ -325,7 +325,7 @@
             script.AppendLine($"    constructor(init?: Partial<{name}>) {{");
             if (!string.IsNullOrEmpty(baseName))
             {
-                script.AppendLine("    super();");
+                script.AppendLine("    super(init);");
             }
 
             script.AppendLine("        Object.assign(this, init);");
