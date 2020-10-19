@@ -138,6 +138,7 @@ namespace VanType.Tests
             var systemUnderTest = new TypeScript()
                 .IncludeEnums(false)
                 .MakeAllPropertiesNullable(false)
+                .AddTypeConverter<string>("string", "''", false)
                 .AddType<SimpleProduct>();
 
             // Act
