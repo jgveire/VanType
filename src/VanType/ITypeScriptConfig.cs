@@ -15,6 +15,14 @@
         ITypeScriptConfig AddAssembly<T>();
 
         /// <summary>
+        /// Adds all models in a assembly to the configuration.
+        /// </summary>
+        /// <typeparam name="T">The type that should be used to determine the assembly.</typeparam>
+        /// <param name="filter">A filter that return if a type should be converted to TypeScript.</param>
+        /// <returns>The TypeScript configuration.</returns>
+        ITypeScriptConfig AddAssembly<T>(Func<Type, bool> filter);
+
+        /// <summary>
         /// Adds a class to the configuration.
         /// </summary>
         /// <typeparam name="TClass">The type of the class.</typeparam>

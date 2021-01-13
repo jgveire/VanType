@@ -53,6 +53,29 @@
         }
 
         /// <inheritdoc />
+        public ITypeScriptConfig AddAssembly<T>(Func<Type, bool> filter)
+        {
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            var types = typeof(T)
+                .Assembly
+                .GetTypes()
+                .Where(type => type.IsClass && !type.IsAbstract);
+            foreach (Type type in types)
+            {
+                if (filter(type))
+                {
+                    Add(type);
+                }
+            }
+
+            return this;
+        }
+
+        /// <inheritdoc />
         public ITypeScriptConfig AddClass<TEntity>()
         {
             return AddType<TEntity>();
