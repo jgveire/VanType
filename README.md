@@ -1,5 +1,5 @@
 # VanType - DEPRICATED
-NOTE: This project has been depricated and archived. There are other solutions like NSwag that do a beter job than this package. Please migrate your code to other solutions.
+**NOTE: This project has been depricated and archived. There are other solutions like NSwag that do a beter job than this package. Please migrate your code to other solutions.**
 
 VanType is a library for generating TypeScript definition files for your .NET models. 
 By using this library your client side models will always match with your server side models.
